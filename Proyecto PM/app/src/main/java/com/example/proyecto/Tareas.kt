@@ -29,7 +29,7 @@ fun Tareas(navController: NavHostController) {
                 texto("Tareas", Modifier.padding(bottom = 16.dp))
                 cuadroDeBusqueda()
                 lista()
-                Button(onClick = {
+                Button(onClick = {navController.navigate(route = Rutas.AgregarTareas.ruta)
 
                 }, modifier = Modifier.fillMaxWidth().
                 padding(horizontal = 30.dp),
