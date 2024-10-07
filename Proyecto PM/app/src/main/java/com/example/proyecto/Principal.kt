@@ -23,10 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 
 @Composable
-fun app(){
+fun Principal(navController: NavHostController) {
     val color = Color(0xFF1567A6)
     val buttonShape = RoundedCornerShape(12.dp)
     LazyColumn(
@@ -58,8 +59,9 @@ fun app(){
                 contentAlignment = Alignment.Center)
             {
                 Button(
-                    onClick = { /* Acción del botón */ },
-                    modifier = Modifier.padding(top = 20.dp)
+                    onClick = {navController.navigate(route = Rutas.Tareas.ruta)},
+                    modifier = Modifier
+                        .padding(top = 20.dp)
                         .border(
                             width = 1.dp,                 // Grosor del borde
                             color = Color.Black,            // Color del borde
@@ -85,7 +87,8 @@ fun app(){
             {
                 Button(
                     onClick = {  },
-                    modifier = Modifier.padding(top = 20.dp)
+                    modifier = Modifier
+                        .padding(top = 20.dp)
                         .border(
                             width = 1.dp,
                             color = Color.Black,
