@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.navigation.NavHostController
 
@@ -57,7 +58,7 @@ fun texto(name: String, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun cuadroDeBusqueda() {
-    var buscar by remember { mutableStateOf("") }
+    var buscar by rememberSaveable { mutableStateOf("") }
     Column(
         modifier = Modifier.padding(16.dp)
     ) {

@@ -28,6 +28,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -69,7 +70,7 @@ fun textoNotas(name: String, modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun cuadroDeBusquedaNotas() {
-    var buscar by remember { mutableStateOf("") }
+    var buscar by rememberSaveable { mutableStateOf("") }
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
