@@ -86,7 +86,7 @@ fun Principal(navController: NavHostController) {
                 contentAlignment = Alignment.Center)
             {
                 Button(
-                    onClick = {  },
+                    onClick = {navController.navigate(route = Rutas.Notas.ruta)},
                     modifier = Modifier
                         .padding(top = 20.dp)
                         .border(
