@@ -2,6 +2,7 @@ package com.example.proyecto
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
@@ -17,29 +18,32 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.navigation.NavHostController
 
-val verdeClaro = Color(0xFFE0E99D)
+val verdeAzul = Color(0xFFE0E99D)
 
 @Composable
 fun Tareas(navController: NavHostController) {
         Scaffold(
             modifier = Modifier.fillMaxSize().background(Color.White)
         ) { innerPadding ->
-            Column(
+            LazyColumn(
                 modifier = Modifier.padding(innerPadding).fillMaxSize()
             ) {
-                texto("Tareas", Modifier.padding(bottom = 16.dp))
-                cuadroDeBusqueda()
-                lista()
-                Button(onClick = {navController.navigate(route = Rutas.AgregarTareas.ruta)
+                item {
+                    texto("Tareas", Modifier.padding(bottom = 16.dp))
+                    cuadroDeBusqueda()
+                    lista()
+                    Button(
+                        onClick = {
+                            navController.navigate(route = Rutas.AgregarTareas.ruta)
 
-                }, modifier = Modifier.fillMaxWidth().
-                padding(horizontal = 30.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1567A6),
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(text = "Agregar Tarea")
+                        }, modifier = Modifier.fillMaxWidth().padding(horizontal = 30.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF1567A6),
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(text = "Agregar Tarea")
+                    }
                 }
             }
         }
@@ -82,6 +86,8 @@ fun lista() {
     val tareas = listOf(
         "Titulo",
         "Titulo",
+        "Titulo",
+        "El Jysus es GAy"
     )
     Column {
         for (tarea in tareas) {
@@ -100,7 +106,7 @@ fun cuadroDeTareas(tarea: String) {
     Card(
         modifier = Modifier.fillMaxWidth().height(200.dp).padding(horizontal = 40.dp),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = verdeClaro)
+        colors = CardDefaults.cardColors(containerColor = verdeAzul)
     ) {
         Box(
             modifier = Modifier.fillMaxSize().padding(16.dp)

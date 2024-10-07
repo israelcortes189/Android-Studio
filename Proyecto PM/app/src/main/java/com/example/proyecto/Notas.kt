@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Scaffold
@@ -37,21 +38,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
+val verdeClaro = Color(0xFFCFFFCF)
 @Composable
 fun Notas(navController: NavHostController) {
     Scaffold(
         modifier = Modifier.fillMaxSize().background(Color.White)
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier.padding(innerPadding).fillMaxSize()
-        ) {
-            textoNotas("Notas", Modifier.padding(bottom = 16.dp))
-            cuadroDeBusquedaNotas()
-            listaNotas()
-            Button(onClick = {}, modifier = Modifier.fillMaxWidth().
-            padding(horizontal = 30.dp)
-            ) {
-                Text(text = "Agregar Nota")
+        )
+        {
+            item{
+                    textoNotas("Notas", Modifier.padding(bottom = 16.dp))
+                    cuadroDeBusquedaNotas()
+                    listaNotas()
+                    Button(onClick = {navController.navigate(route = Rutas.AgregarTareas.ruta)},
+                        modifier = Modifier.fillMaxWidth().
+                        padding(horizontal = 30.dp)
+                    ) {
+                        Text(text = "Agregar Nota")
+                    }
             }
         }
     }
@@ -94,6 +100,10 @@ fun listaNotas() {
     val notas = listOf(
         "Titulo",
         "Titulo",
+        "Titulo",
+        "Titulo",
+        "Titulo",
+        "el jysus es nina "
     )
 
     Column {

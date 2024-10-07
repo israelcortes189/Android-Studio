@@ -1,29 +1,26 @@
 package com.example.proyecto
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Composable
-fun AgregarNotas() {
+fun AgregarNotas(navController: NavHostController) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
@@ -42,7 +39,7 @@ fun AgregarNotas() {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-            val estadoDeTextoV = remember { mutableStateOf("") }
+            val estadoDeTextoV =  rememberSaveable { mutableStateOf("") }
             TextField(
                 value = estadoDeTextoV.value,
                 onValueChange = { estadoDeTextoV.value = it },
@@ -56,7 +53,7 @@ fun AgregarNotas() {
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-            val estadoDeTextoV2 = remember { mutableStateOf("") }
+            val estadoDeTextoV2 =  rememberSaveable { mutableStateOf("") }
             TextField(
                 value = estadoDeTextoV2.value,
                 onValueChange = { estadoDeTextoV2.value = it },

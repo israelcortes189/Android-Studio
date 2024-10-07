@@ -33,5 +33,8 @@ fun navegacion(){
         composable (route= Rutas.AgregarTareas.ruta){
             AgregarTareas(navController)
         }
+        composable (route= Rutas.AgregarNotas.ruta){
+            AgregarNotas(navController)
+        }
     }
 }
