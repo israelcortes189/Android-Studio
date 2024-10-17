@@ -19,10 +19,12 @@ buildscript {
     extra.apply {
         set("lifecycle_version", "2.7.0")
     }
+    val agp_version by extra("8.1.1")
+    val agp_version1 by extra("8.4.2")
 }
 
 plugins {
-    id("com.android.application") version "8.3.1" apply false
+    id("com.android.application") version "8.4.2" apply false
     id("com.android.library") version "8.3.1" apply false
     id("org.jetbrains.kotlin.android") version "1.9.22" apply false
 }
