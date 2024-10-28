@@ -64,10 +64,11 @@ object HomeDestination : NavigationDestination {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
     navigateToItemUpdate: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -92,12 +93,14 @@ fun HomeScreen(
                 )
             }
         },
-    ) { innerPadding ->
+    ) {  innerPadding ->
+
+        // Display List header and List of Items
         HomeBody(
-            itemList = listOf(),
+            itemList = listOf(),  // Empty list is being passed in for itemList
             onItemClick = navigateToItemUpdate,
-            modifier = modifier.fillMaxSize(),
-            contentPadding = innerPadding,
+            modifier = modifier.padding(innerPadding)
+                .fillMaxSize()
         )
     }
 }
