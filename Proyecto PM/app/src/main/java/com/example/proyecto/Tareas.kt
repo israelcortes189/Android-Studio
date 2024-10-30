@@ -1,42 +1,91 @@
 package com.example.proyecto
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.navigation.NavHostController
+import com.example.proyecto.Componentes.MenuLateral
+import com.example.proyecto.Componentes.TopBar
 
 val verdeAzul = Color(0xFFE0E99D)
 
 @Composable
 fun Tareas(navController: NavHostController) {
-        Scaffold(
+    val drawerState = rememberDrawerState(
+        initialValue = DrawerValue.Closed)
+    MenuLateral(
+        navController= navController,
+        drawerState = drawerState
+    ){
+        Scaffold(topBar = {
+            TopBar(drawerState)
+        },
             modifier = Modifier.fillMaxSize().background(Color.White)
         ) { innerPadding ->
             LazyColumn(
                 modifier = Modifier.padding(innerPadding).fillMaxSize()
             ) {
                 item {
-                    texto("Tareas", Modifier.padding(bottom = 16.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Regresar",
+                            modifier = Modifier
+                                .size(35.dp)
+                                .padding(end = 8.dp)
+                                .clickable { navController.popBackStack() },
+                            tint = Color.Gray,
+                        )
+                        texto("Tareas", Modifier.weight(1f))
+                    }
                     cuadroDeBusqueda()
                     lista()
                     Button(
-                        onClick = {
-                            navController.navigate(route = Rutas.AgregarTareas.ruta)
-
-                        }, modifier = Modifier.fillMaxWidth().padding(horizontal = 30.dp),
+                        onClick = { navController.navigate(route = Rutas.AgregarTareas.ruta) },
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 30.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF1567A6),
                             contentColor = Color.White
@@ -47,13 +96,14 @@ fun Tareas(navController: NavHostController) {
                 }
             }
         }
+    }
 }
 
 @Composable
 fun texto(name: String, modifier: Modifier = Modifier) {
     Text(
         text = name,
-        modifier = modifier,
+        modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally),
         fontSize = 45.sp,
         fontWeight = FontWeight.Bold
     )
@@ -72,7 +122,7 @@ fun cuadroDeBusqueda() {
             placeholder = { Text("Buscar...") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color.LightGray,
+               // containerColor = Color.LightGray,
                 focusedIndicatorColor = Color.Blue,
                 unfocusedIndicatorColor = Color.Gray
             )
@@ -87,7 +137,7 @@ fun lista() {
         "Titulo",
         "Titulo",
         "Titulo",
-        "El Jysus es GAy"
+
     )
     Column {
         for (tarea in tareas) {
@@ -121,7 +171,8 @@ fun cuadroDeTareas(tarea: String) {
                 text = tarea,
                 modifier = Modifier.padding(16.dp),
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
             )
             Icon(
                 imageVector = Icons.Default.Delete,

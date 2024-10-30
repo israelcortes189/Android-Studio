@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.proyecto"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.proyecto"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = 25
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.material3)
     val nav_version = "2.8.0"
 
     // Jetpack Compose integration
@@ -64,6 +65,9 @@ dependencies {
 
     // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+
+    // Iconos
+    implementation("androidx.compose.material:material-icons-extended:1.7.4")
 
 
     implementation(libs.androidx.core.ktx)
@@ -81,4 +85,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
 }

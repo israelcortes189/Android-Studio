@@ -1,7 +1,6 @@
 package com.example.proyecto
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,29 +24,49 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
-
 @Composable
 fun Principal(navController: NavHostController) {
     val color = Color(0xFF1567A6)
-    val buttonShape = RoundedCornerShape(12.dp)
+    val buttonShape = RoundedCornerShape(8.dp)
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .padding(top = 50.dp)
+            .padding(top = 5.dp)
     ) {
         item {
+            // se agrego el cerrar sesion
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, end = 8.dp),
+                contentAlignment = Alignment.TopEnd
+            ) {
+                Button(
+                    onClick = {
+
+                        navController.navigate(route = "Login")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+                    shape = buttonShape
+                ) {
+                    Text(text = "Salir", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            }
             Text(
                 text = "Bienvenido Amigo",
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 90.dp),
                 textAlign = TextAlign.Center,
                 style = TextStyle(fontFamily = FontFamily.SansSerif)
             )
+
             Box(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center // Centra el contenido del Box horizontalmente
+                contentAlignment = Alignment.Center
             ) {
                 Image(
                     contentDescription = null,
@@ -55,22 +74,16 @@ fun Principal(navController: NavHostController) {
                     modifier = Modifier
                 )
             }
-            Box(modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center)
-            {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
                 Button(
-                    onClick = {navController.navigate(route = Rutas.Tareas.ruta)},
+                    onClick = { navController.navigate(route = Rutas.Tareas.ruta) },
                     modifier = Modifier
                         .padding(top = 20.dp)
-                        .border(
-                            width = 1.dp,                 // Grosor del borde
-                            color = Color.Black,            // Color del borde
-                            shape = buttonShape // Forma del borde (esquinas redondeadas)
-                        )
-                    ,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = color
-                    ),
+                        .border(width = 1.dp, color = Color.Black, shape = buttonShape),
+                    colors = ButtonDefaults.buttonColors(containerColor = color),
                     shape = buttonShape
                 ) {
                     Text(
@@ -82,24 +95,22 @@ fun Principal(navController: NavHostController) {
                     )
                 }
             }
-            Box(modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center)
-            {
+
+            // Botón de Notas centrado
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
                 Button(
-                    onClick = {navController.navigate(route = Rutas.Notas.ruta)},
+                    onClick = { navController.navigate(route = Rutas.Notas.ruta) },
                     modifier = Modifier
                         .padding(top = 20.dp)
-                        .border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = buttonShape
-                        ),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = color
-                    ),
+                        .border(width = 1.dp, color = Color.Black, shape = buttonShape),
+                    colors = ButtonDefaults.buttonColors(containerColor = color),
                     shape = buttonShape
                 ) {
-                    Text(text = "Notas",
+                    Text(
+                        text = "Notas",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
