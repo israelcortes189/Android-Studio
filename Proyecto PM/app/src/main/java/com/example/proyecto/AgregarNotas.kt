@@ -24,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,7 +46,9 @@ fun AgregarNotas(navController: NavHostController) {
             },
             modifier = Modifier.fillMaxSize()) { innerPadding ->
             LazyColumn(
-                modifier = Modifier.padding(innerPadding).fillMaxSize()
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
             ) {
                 item {
                     // Título con el ícono de retorno
@@ -55,14 +58,14 @@ fun AgregarNotas(navController: NavHostController) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Regresar",
+                            contentDescription = stringResource(R.string.regresar),
                             modifier = Modifier
                                 .padding(end = 8.dp)
                                 .clickable { navController.popBackStack() },
                             tint = Color.Gray
                         )
                         texto(
-                            name = "Agregar Tareas",
+                            name = stringResource(R.string.agregar_tareas),
                             fontSize = 30.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f) // Para centrar el texto en el Row
@@ -71,7 +74,7 @@ fun AgregarNotas(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(80.dp))
                     texto(
-                        name = "Titulo:",
+                        name = stringResource(R.string.titulo),
                         modifier = Modifier.padding(horizontal = 20.dp),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
@@ -80,14 +83,14 @@ fun AgregarNotas(navController: NavHostController) {
                     TextField(
                         value = estadoDeTexto.value,
                         onValueChange = { estadoDeTexto.value = it },
-                        placeholder = { Text("Escribe el título de la tarea...") },
+                        placeholder = { Text(stringResource(R.string.escribe_el_t_tulo_de_la_tarea)) },
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(50.dp))
                     texto(
-                        name = "Descripcion:",
+                        name = stringResource(R.string.descripcion),
                         modifier = Modifier.padding(horizontal = 20.dp),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
@@ -96,7 +99,7 @@ fun AgregarNotas(navController: NavHostController) {
                     TextField(
                         value = estadoDeTexto2.value,
                         onValueChange = { estadoDeTexto2.value = it },
-                        placeholder = { Text("Descripcion de la tarea...") },
+                        placeholder = { Text(stringResource(R.string.descripcion_de_la_tarea)) },
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
@@ -113,7 +116,7 @@ fun AgregarNotas(navController: NavHostController) {
                             contentColor = Color.White
                         )
                     ) {
-                        Text(text = "Adjuntar tareas")
+                        Text(text = stringResource(R.string.adjuntar_tareas))
                     }
                 }
             }

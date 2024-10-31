@@ -1,3 +1,39 @@
 <resources>
-    <string name="app_name">Proyecto</string>
+    <string name="app_name" translatable="false">Proyecto</string>
+    <string name="abrir_menu_lateral">Open Sidebar</string>
+    <string name="regresar">Back</string>
+    <string name="agregar_tareas">Add Tasks</string>
+    <string name="titulo">Title:</string>
+    <string name="escribe_el_t_tulo_de_la_tarea">Enter the task title...</string>
+    <string name="descripcion">Description:</string>
+    <string name="descripcion_de_la_tarea">Task description...</string>
+    <string name="adjuntar_tareas">Attach tasks</string>
+    <string name="regresar_Agregar_Tarea">Back</string>
+    <string name="agregar_nota_Agregar_Tarea">Add Note</string>
+    <string name="titulo_Agregar_Tarea">Title:</string>
+    <string name="escribe_el_t_tulo_de_la_nota">Enter the note title...</string>
+    <string name="descripcion_Agregar_Tarea">Description:</string>
+    <string name="descripcion_de_la_nota">Note description...</string>
+    <string name="agregar_nota_Agregar_Tarea_1">Add Note</string>
+    <string name="regresar_Notas">Back</string>
+    <string name="notas_Notas">Notes</string>
+    <string name="agregar_nota_Notas">Add Note</string>
+    <string name="buscar">Search...</string>
+    <string name="editar_nota">Edit note</string>
+    <string name="eliminar_nota">Delete note</string>
+    <string name="salir">Exit</string>
+    <string name="bienvenido_amigo">Welcome, Friend</string>
+    <string name="tareas_Principal">Tasks</string>
+    <string name="notas_Principal">Notes</string>
+    <string name="regresar_Tareas">Back</string>
+    <string name="agregar_tarea_Tarea">Add Task</string>
+    <string name="buscar_Tareas">Search...</string>
+    <string name="editar_tarea">Edit task</string>
+    <string name="eliminar_tarea">Delete task</string>
+    <string name="pagina_principal">Home Page</string>
+    <string name="notas">Notes</string>
+    <string name="tareas">Tasks</string>
+    <string name="agregar_notas">Add Notes</string>
+    <string name="agregar_tareas1">Add Tasks</string>
+    <string name="tareas1">Tasks</string>
 </resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="abrir_menu_lateral">Ouvrir le menu latéral</string>
+
+    <string name="regresar">Retour</string>
+    <string name="agregar_tareas">Ajouter des Tâches</string>
+    <string name="titulo">Titre :</string>
+    <string name="escribe_el_t_tulo_de_la_tarea">Entrez le titre de la tâche...</string>
+    <string name="descripcion">Description :</string>
+    <string name="descripcion_de_la_tarea">Description de la tâche...</string>
+    <string name="adjuntar_tareas">Joindre des tâches</string>
+    <string name="regresar_Agregar_Tarea">Retour</string>
+    <string name="agregar_nota_Agregar_Tarea">Ajouter une Note</string>
+    <string name="titulo_Agregar_Tarea">Titre :</string>
+    <string name="escribe_el_t_tulo_de_la_nota">Entrez le titre de la note...</string>
+    <string name="descripcion_Agregar_Tarea">Description :</string>
+    <string name="descripcion_de_la_nota">Description de la note...</string>
+    <string name="agregar_nota_Agregar_Tarea_1">Ajouter une Note</string>
+    <string name="regresar_Notas">Retour</string>
+    <string name="notas_Notas">Notes</string>
+    <string name="agregar_nota_Notas">Ajouter une Note</string>
+    <string name="buscar">Rechercher...</string>
+    <string name="editar_nota">Modifier la note</string>
+    <string name="eliminar_nota">Supprimer la note</string>
+    <string name="salir">Quitter</string>
+    <string name="bienvenido_amigo">Bienvenue, Ami</string>
+    <string name="tareas_Principal">Tâches</string>
+    <string name="notas_Principal">Notes</string>
+    <string name="regresar_Tareas">Retour</string>
+    <string name="agregar_tarea_Tarea">Ajouter une Tâche</string>
+    <string name="buscar_Tareas">Rechercher...</string>
+    <string name="editar_tarea">Modifier la tâche</string>
+    <string name="eliminar_tarea">Supprimer la tâche</string>
+    <string name="pagina_principal">Page Principale</string>
+    <string name="notas">Notes</string>
+    <string name="tareas">Tâches</string>
+    <string name="agregar_notas">Ajouter des Notes</string>
+    <string name="agregar_tareas1">Ajouter des Tâches</string>
+    <string name="tareas1">Tâches</string>
+</resources>

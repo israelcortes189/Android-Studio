@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.proyecto.Models.menu_Lateral
@@ -40,7 +41,7 @@ fun MenuLateral(
                         icon={
                           Icon(item.icon,null)
                         },
-                        label = {Text(text=item.title)},
+                        label = {Text(text= stringResource(id = item.title))},
                         selected = currentRoute(navController) == item.ruta,
                         onClick = {
 

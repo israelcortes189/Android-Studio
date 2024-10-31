@@ -24,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,7 +46,9 @@ fun AgregarTareas(navController: NavHostController) {
             },
             modifier = Modifier.fillMaxSize()) { innerPadding ->
             LazyColumn(
-                modifier = Modifier.padding(innerPadding).fillMaxSize()
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
             ) {
                 item {
                     // Icono de regresar en notas
@@ -55,14 +58,14 @@ fun AgregarTareas(navController: NavHostController) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Regresar",
+                            contentDescription = stringResource(R.string.regresar_Agregar_Tarea),
                             modifier = Modifier
                                 .padding(end = 8.dp)
                                 .clickable { navController.popBackStack() },
                             tint = Color.Gray
                         )
                         texto2(
-                            name = "Agregar Nota",
+                            name = stringResource(R.string.agregar_nota_Agregar_Tarea),
                             modifier = Modifier.padding(horizontal = 50.dp),
                             fontSize = 30.sp,
                             fontWeight = FontWeight.Bold
@@ -73,7 +76,7 @@ fun AgregarTareas(navController: NavHostController) {
 
 
                     texto2(
-                        name = "Titulo:",
+                        name = stringResource(R.string.titulo_Agregar_Tarea),
                         modifier = Modifier.padding(horizontal = 20.dp),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
@@ -82,7 +85,7 @@ fun AgregarTareas(navController: NavHostController) {
                     TextField(
                         value = estadoDeTextoV.value,
                         onValueChange = { estadoDeTextoV.value = it },
-                        placeholder = { Text("Escribe el título de la nota...") },
+                        placeholder = { Text(stringResource(R.string.escribe_el_t_tulo_de_la_nota)) },
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
@@ -91,7 +94,7 @@ fun AgregarTareas(navController: NavHostController) {
                     Spacer(modifier = Modifier.height(50.dp))
 
                     texto2(
-                        name = "Descripcion:",
+                        name = stringResource(R.string.descripcion_Agregar_Tarea),
                         modifier = Modifier.padding(horizontal = 20.dp),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
@@ -100,7 +103,7 @@ fun AgregarTareas(navController: NavHostController) {
                     TextField(
                         value = estadoDeTextoV2.value,
                         onValueChange = { estadoDeTextoV2.value = it },
-                        placeholder = { Text("Descripcion de la nota...") },
+                        placeholder = { Text(stringResource(R.string.descripcion_de_la_nota)) },
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
@@ -119,7 +122,7 @@ fun AgregarTareas(navController: NavHostController) {
                             contentColor = Color.White
                         )
                     ) {
-                        Text(text = "Agregar Nota")
+                        Text(text = stringResource(R.string.agregar_nota_Agregar_Tarea_1))
                     }
                 }
             }

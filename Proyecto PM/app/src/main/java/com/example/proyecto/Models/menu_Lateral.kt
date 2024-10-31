@@ -7,36 +7,37 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.NoteAlt
 import androidx.compose.material.icons.outlined.Task
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.proyecto.R
 import com.example.proyecto.Rutas
 
 sealed class menu_Lateral(
     val icon: ImageVector,
-    val title: String,
+    val title: Int,
     val ruta: String
 ) {
     object menu_Lateral1 : menu_Lateral(
         Icons.Outlined.Home,
-        "Pagina Principal",
+        R.string.pagina_principal,
         Rutas.Principal.ruta
     )
     object menu_Lateral2 : menu_Lateral(
         Icons.Outlined.NoteAlt,
-        "Notas",
+        R.string.notas,
         Rutas.Notas.ruta
     )
     object menu_Lateral3 : menu_Lateral(
         Icons.Outlined.Task,
-        "Tareas",
+        R.string.tareas,
         Rutas.Tareas.ruta
     )
     object menu_Lateral4 : menu_Lateral(
         Icons.Outlined.AddTask,
-        "Agregar Nota",
+        R.string.agregar_notas,
         Rutas.AgregarNotas.ruta
     )
     object menu_Lateral5 : menu_Lateral(
         Icons.Outlined.AddBox,
-        "Agregar Tarea",
+        R.string.agregar_tareas1,
         Rutas.AgregarTareas.ruta
     )
 

@@ -10,6 +10,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.res.stringResource
+import com.example.proyecto.R
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -17,14 +19,14 @@ import kotlinx.coroutines.launch
 fun TopBar(drawerState: DrawerState){
     val scope = rememberCoroutineScope()
     CenterAlignedTopAppBar(
-        title = {Text(text = "!Hola!")},
+        title = {Text(text = "!NOT-ITSUR!")},
         navigationIcon = {
             IconButton(onClick= {
                 scope.launch{
                     drawerState.open()
                 }
             }) {
-               Icon(Icons.Outlined.Menu, "Abrir Menu Lateral")
+               Icon(Icons.Outlined.Menu, stringResource(R.string.abrir_menu_lateral))
             }
         }
 

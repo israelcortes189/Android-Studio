@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -50,11 +51,11 @@ fun Principal(navController: NavHostController) {
                     colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
                     shape = buttonShape
                 ) {
-                    Text(text = "Salir", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.salir), color = Color.White, fontWeight = FontWeight.Bold)
                 }
             }
             Text(
-                text = "Bienvenido Amigo",
+                text = stringResource(R.string.bienvenido_amigo),
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
@@ -87,7 +88,7 @@ fun Principal(navController: NavHostController) {
                     shape = buttonShape
                 ) {
                     Text(
-                        text = "Tareas",
+                        text = stringResource(R.string.tareas_Principal),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
@@ -110,7 +111,7 @@ fun Principal(navController: NavHostController) {
                     shape = buttonShape
                 ) {
                     Text(
-                        text = "Notas",
+                        text = stringResource(R.string.notas_Principal),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,

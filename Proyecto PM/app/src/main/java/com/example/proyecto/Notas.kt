@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,10 +65,14 @@ fun Notas(navController: NavHostController) {
             topBar = {
                 TopBar(drawerState)
             },
-            modifier = Modifier.fillMaxSize().background(Color.White),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
         ) { innerPadding ->
             LazyColumn(
-                modifier = Modifier.padding(innerPadding).fillMaxSize()
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
             ) {
                 item {
                     Row(
@@ -78,22 +83,24 @@ fun Notas(navController: NavHostController) {
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Regresar",
+                            contentDescription = stringResource(R.string.regresar_Notas),
                             modifier = Modifier
                                 .size(35.dp)
                                 .padding(end = 8.dp)
                                 .clickable { navController.popBackStack() },
                             tint = Color.Gray,
                         )
-                        textoNotas("Notas", Modifier.weight(1f))
+                        textoNotas(stringResource(R.string.notas_Notas), Modifier.weight(1f))
                     }
                     cuadroDeBusquedaNotas()
                     listaNotas()
                     Button(
                         onClick = { navController.navigate(route = Rutas.AgregarNotas.ruta) },
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 30.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 30.dp)
                     ) {
-                        Text(text = "Agregar Nota")
+                        Text(text = stringResource(R.string.agregar_nota_Notas))
                     }
                 }
             }
@@ -121,7 +128,7 @@ fun cuadroDeBusquedaNotas() {
         TextField(
             value = buscar,
             onValueChange = { buscar = it },
-            placeholder = { Text("Buscar...") },
+            placeholder = { Text(stringResource(R.string.buscar)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
               //  containerColor = Color.LightGray,
@@ -156,17 +163,24 @@ val colorAzulVibrante = Color(0xFF4A90E2)
 @Composable
 fun cuadroDeTareasNotas(nota: String) {
     Card(
-        modifier = Modifier.fillMaxWidth().height(200.dp).padding(horizontal = 40.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(horizontal = 40.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = verdeClaro)
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Edit,
-                contentDescription = "Editar nota",
-                modifier = Modifier.size(35.dp).align(Alignment.BottomEnd),
+                contentDescription = stringResource(R.string.editar_nota),
+                modifier = Modifier
+                    .size(35.dp)
+                    .align(Alignment.BottomEnd),
                 tint = Color.Gray,
             )
             Text(
@@ -178,8 +192,10 @@ fun cuadroDeTareasNotas(nota: String) {
             )
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "Eliminar nota",
-                modifier = Modifier.size(35.dp).align(Alignment.TopEnd),
+                contentDescription = stringResource(R.string.eliminar_nota),
+                modifier = Modifier
+                    .size(35.dp)
+                    .align(Alignment.TopEnd),
                 tint = Color.Red,
             )
         }
