@@ -1,5 +1,3 @@
-@file:Suppress("NAME_SHADOWING")
-
 package com.example.proyecto
 
 import androidx.compose.foundation.background
@@ -32,6 +30,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,13 +45,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.proyecto.Componentes.MenuLateral
 import com.example.proyecto.Componentes.TopBar
+import com.example.proyecto.Models.Nota
+import com.example.proyecto.screens.NotasViewModel
 
 
 val verdeClaro = Color(0xFFCFFFCF)
 
 @Composable
-fun Notas(navController: NavHostController) {
-
+fun Notas(navController: NavHostController, notaViewModel: NotasViewModel) {
+    val notas = notaViewModel.listaNotas.collectAsState().value
     val drawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed
     )
@@ -93,7 +94,7 @@ fun Notas(navController: NavHostController) {
                         textoNotas(stringResource(R.string.notas_Notas), Modifier.weight(1f))
                     }
                     cuadroDeBusquedaNotas()
-                    listaNotas()
+                    listaNotas(notas , notaViewModel = notaViewModel)
                     Button(
                         onClick = { navController.navigate(route = Rutas.AgregarNotas.ruta) },
                         modifier = Modifier
@@ -141,27 +142,18 @@ fun cuadroDeBusquedaNotas() {
 }
 
 @Composable
-fun listaNotas() {
-    val notas = listOf(
-        "Titulo",
-        "Titulo",
-        "Titulo",
-        "Titulo",
-        "Titulo",
-
-    )
-
+fun listaNotas(notas: List<Nota> , notaViewModel: NotasViewModel) {
     Column {
         for (nota in notas) {
-            cuadroDeTareasNotas(nota)
+            cuadroDeTareasNotas(nota, notaViewModel =  notaViewModel)
             Spacer(modifier = Modifier.height(30.dp))
         }
         Spacer(modifier = Modifier.height(60.dp))
     }
 }
-val colorAzulVibrante = Color(0xFF4A90E2)
+
 @Composable
-fun cuadroDeTareasNotas(nota: String) {
+fun cuadroDeTareasNotas(nota: Nota, notaViewModel: NotasViewModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -184,7 +176,17 @@ fun cuadroDeTareasNotas(nota: String) {
                 tint = Color.Gray,
             )
             Text(
-                text = nota,
+                text = nota.titulo,
+                modifier = Modifier.padding(bottom = 16.dp),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Text(
+                text = nota.descripcion,
                 modifier = Modifier.padding(16.dp),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -195,8 +197,10 @@ fun cuadroDeTareasNotas(nota: String) {
                 contentDescription = stringResource(R.string.eliminar_nota),
                 modifier = Modifier
                     .size(35.dp)
-                    .align(Alignment.TopEnd),
-                tint = Color.Red,
+                    .clickable {
+                        notaViewModel.removeNota(nota)    // Llama a removeNota en el ViewModel
+                    },
+                tint = Color.Red
             )
         }
     }

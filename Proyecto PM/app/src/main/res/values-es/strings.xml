@@ -3,18 +3,17 @@
     <string name="abrir_menu_lateral">Abrir Menu Lateral</string>
 
     <string name="regresar">Regresar</string>
-    <string name="agregar_tareas">Agregar Tareas</string>
     <string name="titulo">Titulo:</string>
-    <string name="escribe_el_t_tulo_de_la_tarea">Escribe el título de la tarea...</string>
+    <string name="escribe_el_t_tulo_de_la_tarea">Escribe el título de la nota...</string>
     <string name="descripcion">Descripcion:</string>
-    <string name="descripcion_de_la_tarea">Descripcion de la tarea...</string>
+    <string name="descripcion_de_la_tarea">Descripcion de la nota...</string>
     <string name="adjuntar_tareas">Adjuntar tareas</string>
     <string name="regresar_Agregar_Tarea">Regresar</string>
-    <string name="agregar_nota_Agregar_Tarea">Agregar Nota</string>
+    <string name="agregar_nota_Agregar_Tarea">Agregar Tarea</string>
     <string name="titulo_Agregar_Tarea">Titulo:</string>
-    <string name="escribe_el_t_tulo_de_la_nota">Escribe el título de la nota...</string>
+    <string name="escribe_el_t_tulo_de_la_nota">Escribe el título de la tarea...</string>
     <string name="descripcion_Agregar_Tarea">Descripcion:</string>
-    <string name="descripcion_de_la_nota">Descripcion de la nota...</string>
+    <string name="descripcion_de_la_nota">Descripcion de la tarea...</string>
     <string name="agregar_nota_Agregar_Tarea_1">Agregar Nota</string>
     <string name="regresar_Notas">Regresar</string>
     <string name="notas_Notas">Notas</string>
@@ -35,6 +34,6 @@
     <string name="notas">Notas</string>
     <string name="tareas">Tareas</string>
     <string name="agregar_notas">Agregar Notas</string>
-    <string name="agregar_tareas1">Agregar Tareas</string>
+    <string name="agregar_tareas">Agregar Tareas</string>
     <string name="tareas1">Tareas</string>
 </resources>

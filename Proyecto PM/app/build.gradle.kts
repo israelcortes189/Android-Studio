@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -30,17 +32,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
     packaging {
         resources {
@@ -50,7 +52,14 @@ android {
 }
 
 dependencies {
+
+    val room_version = "2.5.2"// O la última versión
+    implementation ("androidx.room:room-runtime:$room_version")
+    kapt ("androidx.room:room-compiler:$room_version")
+
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.room.common)
+    implementation(libs.androidx.room.ktx)
     val nav_version = "2.8.0"
 
     // Jetpack Compose integration
@@ -69,6 +78,11 @@ dependencies {
     // Iconos
     implementation("androidx.compose.material:material-icons-extended:1.7.4")
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+
+    // implementation ("com.google.dagger:hilt-android:2.44")
+    // kapt "com.google.dagger:hilt-compiler:2.44"
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -86,5 +100,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    val hilt_navigation_compose_version ="1.0.0"
+    val hilt_version = "2.44"
+    implementation("androidx.hilt:hilt-navigation-compose:$hilt_navigation_compose_version")
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
 
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
 }

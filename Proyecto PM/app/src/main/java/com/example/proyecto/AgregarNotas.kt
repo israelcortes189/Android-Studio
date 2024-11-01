@@ -31,9 +31,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.proyecto.Componentes.MenuLateral
 import com.example.proyecto.Componentes.TopBar
+import com.example.proyecto.Models.Nota
+import com.example.proyecto.screens.NotasViewModel
 
 @Composable
-fun AgregarNotas(navController: NavHostController) {
+fun AgregarNotas(navController: NavHostController, notaViewModel: NotasViewModel) {
+
     val drawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed)
     MenuLateral(
@@ -65,7 +68,7 @@ fun AgregarNotas(navController: NavHostController) {
                             tint = Color.Gray
                         )
                         texto(
-                            name = stringResource(R.string.agregar_tareas),
+                            name = stringResource(R.string.agregar_notas),
                             fontSize = 30.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f) // Para centrar el texto en el Row
@@ -107,7 +110,11 @@ fun AgregarNotas(navController: NavHostController) {
                     )
 
                     Button(
-                        onClick = { navController.navigate(route = Rutas.Tareas.ruta) },
+                        onClick = {
+                            if(estadoDeTexto.value.isNotBlank() && estadoDeTexto2.value.isNotBlank()){
+                                notaViewModel.addNota(Nota(titulo = estadoDeTexto.value, descripcion = estadoDeTexto2.value))
+                            }
+                            navController.navigate(route = Rutas.Notas.ruta) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),

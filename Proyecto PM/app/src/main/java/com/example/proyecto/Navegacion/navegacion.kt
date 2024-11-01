@@ -10,9 +10,10 @@ import com.example.proyecto.Notas
 import com.example.proyecto.Principal
 import com.example.proyecto.Rutas
 import com.example.proyecto.Tareas
+import com.example.proyecto.screens.NotasViewModel
 
 @Composable
-fun navegacion() {
+fun navegacion(notaViewModel: NotasViewModel,) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Rutas.Principal.ruta) {
         composable(route = Rutas.Tareas.ruta) {
@@ -22,13 +23,13 @@ fun navegacion() {
             Principal(navController)
         }
         composable(route = Rutas.Notas.ruta) {
-            Notas(navController)
+            Notas(navController, notaViewModel = notaViewModel)
         }
         composable(route = Rutas.AgregarTareas.ruta) {
             AgregarTareas(navController)
         }
         composable(route = Rutas.AgregarNotas.ruta) {
-            AgregarNotas(navController)
+            AgregarNotas(navController, notaViewModel = notaViewModel)
         }
     }
 }
