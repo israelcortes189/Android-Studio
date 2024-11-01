@@ -7,10 +7,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.proyecto.Models.Nota
+import com.example.proyecto.Models.Tarea
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NotasDataBaseDao {
+    //Funciones Notas
     @Query("SELECT * FROM notas")
     fun getNotas() : Flow<List<Nota>>
 
@@ -29,4 +31,22 @@ interface NotasDataBaseDao {
     @Query("DELETE FROM notas")
     suspend fun deleteAllNotas()
 
+    //Funciones para Tareas
+    @Query("SELECT * FROM tareas")
+    fun getTareas(): Flow<List<Tarea>>
+
+    @Query("SELECT * FROM tareas WHERE id = :id")
+    suspend fun getTareaById(id: Int): Tarea
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTarea(tarea: Tarea)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateTarea(tarea: Tarea)
+
+    @Delete
+    suspend fun deleteTarea(tarea: Tarea)
+
+    @Query("DELETE FROM tareas")
+    suspend fun deleteAllTareas()
 }
