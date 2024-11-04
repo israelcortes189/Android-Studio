@@ -94,7 +94,7 @@ fun Notas(navController: NavHostController, notaViewModel: NotasViewModel) {
                         textoNotas(stringResource(R.string.notas_Notas), Modifier.weight(1f))
                     }
                     cuadroDeBusquedaNotas()
-                    listaNotas(notas , notaViewModel = notaViewModel)
+                    listaNotas(notas , notaViewModel = notaViewModel, navController)
                     Button(
                         onClick = { navController.navigate(route = Rutas.AgregarNotas.ruta) },
                         modifier = Modifier
@@ -142,10 +142,10 @@ fun cuadroDeBusquedaNotas() {
 }
 
 @Composable
-fun listaNotas(notas: List<Nota> , notaViewModel: NotasViewModel) {
+fun listaNotas(notas: List<Nota> , notaViewModel: NotasViewModel, navController: NavHostController) {
     Column {
         for (nota in notas) {
-            cuadroDeTareasNotas(nota, notaViewModel =  notaViewModel)
+            cuadroDeTareasNotas(nota, notaViewModel =  notaViewModel, navController)
             Spacer(modifier = Modifier.height(30.dp))
         }
         Spacer(modifier = Modifier.height(60.dp))
@@ -153,7 +153,7 @@ fun listaNotas(notas: List<Nota> , notaViewModel: NotasViewModel) {
 }
 
 @Composable
-fun cuadroDeTareasNotas(nota: Nota, notaViewModel: NotasViewModel) {
+fun cuadroDeTareasNotas(nota: Nota, notaViewModel: NotasViewModel, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -172,7 +172,11 @@ fun cuadroDeTareasNotas(nota: Nota, notaViewModel: NotasViewModel) {
                 contentDescription = stringResource(R.string.editar_nota),
                 modifier = Modifier
                     .size(35.dp)
-                    .align(Alignment.BottomEnd),
+                    .align(Alignment.TopEnd)
+                    .clickable {
+                        val id = nota.id // Cambia 123 por el valor que desees enviar
+                        navController.navigate("RutaEditarNota/$id")
+                    },
                 tint = Color.Gray,
             )
             Text(
@@ -197,6 +201,7 @@ fun cuadroDeTareasNotas(nota: Nota, notaViewModel: NotasViewModel) {
                 contentDescription = stringResource(R.string.eliminar_nota),
                 modifier = Modifier
                     .size(35.dp)
+                    .align(Alignment.BottomEnd)
                     .clickable {
                         notaViewModel.removeNota(nota)    // Llama a removeNota en el ViewModel
                     },

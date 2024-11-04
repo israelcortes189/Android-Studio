@@ -42,7 +42,6 @@ fun MenuLateral(
                         label = {Text(text= stringResource(id = item.title))},
                         selected = currentRoute(navController) == item.ruta,
                         onClick = {
-
                             navController.navigate(item.ruta)
                         }
                     )

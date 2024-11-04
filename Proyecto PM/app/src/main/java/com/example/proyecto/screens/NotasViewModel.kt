@@ -89,4 +89,12 @@ class NotasViewModel @Inject constructor(
     fun getAllTotas() = viewModelScope.launch {
         repo.getAllTareas()
     }
+
+    suspend fun getNotaById(id: Int): Nota? {
+        return repo.getNotaById(id)
+    }
+
+    suspend fun getTareaById(id: Int): Tarea? {
+        return repo.getTareaById(id)
+    }
 }

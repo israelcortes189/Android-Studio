@@ -36,7 +36,6 @@ import com.example.proyecto.screens.NotasViewModel
 
 @Composable
 fun AgregarNotas(navController: NavHostController, notaViewModel: NotasViewModel) {
-
     val drawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed)
     MenuLateral(

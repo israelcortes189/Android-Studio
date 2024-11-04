@@ -26,4 +26,11 @@ class NotasRepository @Inject constructor(private val notasDatabaseDao: NotasDat
 
     fun getAllTareas(): Flow<List<Tarea>> =
          notasDatabaseDao.getTareas().flowOn(Dispatchers.IO).conflate()
+
+    suspend fun getNotaById(id: Int): Nota? =
+        notasDatabaseDao.getNotaById(id)
+
+    suspend fun getTareaById(id: Int): Tarea? =
+        notasDatabaseDao.getTareaById(id)
+
 }

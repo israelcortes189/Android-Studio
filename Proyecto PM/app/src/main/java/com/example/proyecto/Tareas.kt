@@ -31,6 +31,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -45,11 +46,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.proyecto.Componentes.MenuLateral
 import com.example.proyecto.Componentes.TopBar
+import com.example.proyecto.Models.Tarea
+import com.example.proyecto.screens.NotasViewModel
 
 val verdeAzul = Color(0xFFE0E99D)
 
 @Composable
-fun Tareas(navController: NavHostController) {
+fun Tareas(navController: NavHostController, notaViewModel: NotasViewModel) {
+    val tareas = notaViewModel.listaTareas.collectAsState().value
+
     val drawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed)
     MenuLateral(
@@ -87,7 +92,7 @@ fun Tareas(navController: NavHostController) {
                         texto(stringResource(R.string.tareas1), Modifier.weight(1f))
                     }
                     cuadroDeBusqueda()
-                    lista()
+                    listaTareas(tareas, notaViewModel = notaViewModel, navController)
                     Button(
                         onClick = { navController.navigate(route = Rutas.AgregarTareas.ruta) },
                         modifier = Modifier
@@ -129,7 +134,6 @@ fun cuadroDeBusqueda() {
             placeholder = { Text(stringResource(R.string.buscar_Tareas)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
-               // containerColor = Color.LightGray,
                 focusedIndicatorColor = Color.Blue,
                 unfocusedIndicatorColor = Color.Gray
             )
@@ -139,27 +143,18 @@ fun cuadroDeBusqueda() {
 }
 
 @Composable
-fun lista() {
-    val tareas = listOf(
-        "Titulo",
-        "Titulo",
-        "Titulo",
-
-    )
+fun listaTareas(tareas: List<Tarea>, notaViewModel: NotasViewModel, navController: NavHostController) {
     Column {
         for (tarea in tareas) {
-            cuadroDeTareas(tarea)
-            Text(text = "Completar antes de:  08/10/2024",
-                modifier = Modifier.padding(horizontal = 50.dp),
-                fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(20.dp))
+            cuadroDeTareas(tarea, notaViewModel =  notaViewModel, navController)
+            Spacer(modifier = Modifier.height(30.dp))
         }
         Spacer(modifier = Modifier.height(60.dp))
     }
 }
 
 @Composable
-fun cuadroDeTareas(tarea: String) {
+fun cuadroDeTareas(tarea: Tarea, notaViewModel: NotasViewModel, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -175,14 +170,28 @@ fun cuadroDeTareas(tarea: String) {
         ){
             Icon(
                 imageVector = Icons.Default.Edit,
-                contentDescription = stringResource(R.string.editar_tarea),
+                contentDescription = stringResource(R.string.editar_nota),
                 modifier = Modifier
                     .size(35.dp)
-                    .align(Alignment.BottomEnd),
+                    .align(Alignment.TopEnd)
+                    .clickable {
+                        val id= tarea.id
+                        navController.navigate("RutaEditarTarea/$id")
+                    },
                 tint = Color.Gray,
             )
             Text(
-                text = tarea,
+                text = tarea.titulo,
+                modifier = Modifier.padding(bottom = 16.dp),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Text(
+                text = tarea.descripcion,
                 modifier = Modifier.padding(16.dp),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -193,8 +202,11 @@ fun cuadroDeTareas(tarea: String) {
                 contentDescription = stringResource(R.string.eliminar_tarea),
                 modifier = Modifier
                     .size(35.dp)
-                    .align(Alignment.TopEnd),
-                tint = Color.Red,
+                    .align(Alignment.BottomEnd)
+                    .clickable {
+                        notaViewModel.removeTarea(tarea)    // Llama a removeNota en el ViewModel
+                    },
+                tint = Color.Red
             )
         }
     }

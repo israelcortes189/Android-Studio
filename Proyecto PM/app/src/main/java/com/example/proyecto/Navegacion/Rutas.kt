@@ -6,4 +6,6 @@ sealed class Rutas (var ruta:String) {
     object AgregarTareas:Rutas("RutaAgregarTareas")
     object AgregarNotas:Rutas("RutaAgregarNotas")
     object Principal: Rutas("RutaPrincipal")
+    object EditarNota : Rutas("RutaEditarNota/{id}")
+    object EditarTarea : Rutas("RutaEditarTarea/{id}")
 }

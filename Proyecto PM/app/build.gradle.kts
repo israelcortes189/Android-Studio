@@ -53,6 +53,7 @@ android {
 
 dependencies {
 
+    releaseImplementation(libs.androidx.media3.common.ktx)
     val room_version = "2.5.2"// O la última versión
     implementation ("androidx.room:room-runtime:$room_version")
     kapt ("androidx.room:room-compiler:$room_version")

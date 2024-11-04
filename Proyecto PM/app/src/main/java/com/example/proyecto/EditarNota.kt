@@ -19,8 +19,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,11 +35,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.proyecto.Componentes.MenuLateral
 import com.example.proyecto.Componentes.TopBar
-import com.example.proyecto.Models.Tarea
+import com.example.proyecto.Models.Nota
 import com.example.proyecto.screens.NotasViewModel
 
 @Composable
-fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewModel) {
+fun EditarNota(navController: NavHostController, notaViewModel: NotasViewModel, id: Int) {
+    var nota by remember { mutableStateOf<Nota?>(null) }
+    var titulo by remember { mutableStateOf("") }  // Estado editable para el título
+    var contenido by remember { mutableStateOf("") }  // Estado editable para el contenido
+
+    LaunchedEffect(id) {
+        val fetchedNota = notaViewModel.getNotaById(id)
+        nota = fetchedNota
+        titulo = fetchedNota?.titulo ?: ""
+        contenido = fetchedNota?.descripcion ?: ""
+    }
+
     val drawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed)
     MenuLateral(
@@ -53,59 +68,58 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                     .fillMaxSize()
             ) {
                 item {
-                    // Icono de regresar en notas
+                    // Título con el ícono de retorno
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 20.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.regresar_Agregar_Tarea),
+                            contentDescription = stringResource(R.string.regresar),
                             modifier = Modifier
                                 .padding(end = 8.dp)
                                 .clickable { navController.popBackStack() },
                             tint = Color.Gray
                         )
-                        texto2(
-                            name = stringResource(R.string.agregar_nota_Agregar_Tarea),
-                            modifier = Modifier.padding(horizontal = 50.dp),
+                        texto(
+                            name = "Editar Nota",
                             fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(1f) // Para centrar el texto en el Row
                         )
                     }
 
                     Spacer(modifier = Modifier.height(80.dp))
-
-
-                    texto2(
-                        name = stringResource(R.string.titulo_Agregar_Tarea),
+                    texto(
+                        name = stringResource(R.string.titulo),
                         modifier = Modifier.padding(horizontal = 20.dp),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    val estadoDeTextoV = rememberSaveable { mutableStateOf("") }
+                    val estadoDeTexto = rememberSaveable { mutableStateOf("") }
                     TextField(
-                        value = estadoDeTextoV.value,
-                        onValueChange = { estadoDeTextoV.value = it },
-                        placeholder = { Text(stringResource(R.string.escribe_el_t_tulo_de_la_nota)) },
+                        value = titulo,
+                        onValueChange = { newTitle ->
+                            titulo = newTitle  // Actualizar el estado editable del título
+                        },
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
                     )
-
                     Spacer(modifier = Modifier.height(50.dp))
-
-                    texto2(
-                        name = stringResource(R.string.descripcion_Agregar_Tarea),
+                    texto(
+                        name = stringResource(R.string.descripcion),
                         modifier = Modifier.padding(horizontal = 20.dp),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    val estadoDeTextoV2 = rememberSaveable { mutableStateOf("") }
+                    val estadoDeTexto2 = rememberSaveable { mutableStateOf("") }
                     TextField(
-                        value = estadoDeTextoV2.value,
-                        onValueChange = { estadoDeTextoV2.value = it },
-                        placeholder = { Text(stringResource(R.string.descripcion_de_la_nota)) },
+                            value = contenido,
+                            onValueChange = { newContent ->
+                                contenido = newContent  // Actualizar el estado editable del contenido
+                            },
+                        placeholder = { Text(stringResource(R.string.descripcion_de_la_tarea)) },
                         modifier = Modifier
                             .padding(horizontal = 20.dp)
                             .fillMaxWidth()
@@ -114,11 +128,11 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
 
                     Button(
                         onClick = {
-                            if(estadoDeTextoV.value.isNotBlank() && estadoDeTextoV2.value.isNotBlank()){
-                                notaViewModel.addTarea(Tarea(titulo = estadoDeTextoV.value, descripcion = estadoDeTextoV2.value))
-                            }
-                            navController.navigate(route = Rutas.Tareas.ruta)
-                        },
+                            nota?.let {
+                                val updatedNota = it.copy(titulo = titulo, descripcion = contenido)
+                                notaViewModel.updateNota(updatedNota)
+                                }
+                            navController.navigate(route = Rutas.Notas.ruta) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
@@ -127,23 +141,11 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                             contentColor = Color.White
                         )
                     ) {
-                        Text(text = stringResource(R.string.agregar_nota_Agregar_Tarea_1))
+                        Text(text = "Editar")
                     }
                 }
             }
         }
     }
+
 }
-
-@Composable
-fun texto(name: String, fontSize: androidx.compose.ui.unit.TextUnit, modifier: Modifier = Modifier, fontWeight: FontWeight) {
-    Text(
-        text = name,
-        modifier = modifier,
-        fontSize = fontSize,
-        fontWeight = fontWeight
-    )
-}
-
-
-
