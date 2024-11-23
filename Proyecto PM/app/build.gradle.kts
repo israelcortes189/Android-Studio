@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.proyecto"
-    compileSdk = 35
+    compileSdkVersion(rootProject.extra["compileSdkVersion"] as Int)
 
     defaultConfig {
         applicationId = "com.example.proyecto"
@@ -53,6 +53,8 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.foundation.android)
+    implementation(libs.androidx.storage)
     releaseImplementation(libs.androidx.media3.common.ktx)
     val room_version = "2.5.2"// O la última versión
     implementation ("androidx.room:room-runtime:$room_version")
@@ -108,4 +110,6 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
 
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+
+    implementation("io.coil-kt:coil-compose:2.1.0")
 }

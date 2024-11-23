@@ -72,6 +72,7 @@ fun AgregarNotas(navController: NavHostController, notaViewModel: NotasViewModel
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.weight(1f) // Para centrar el texto en el Row
                         )
+
                     }
 
                     Spacer(modifier = Modifier.height(80.dp))
