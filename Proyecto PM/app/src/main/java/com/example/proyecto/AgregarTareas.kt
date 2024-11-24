@@ -91,7 +91,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                         MenuFotos(onImageSelected = { selectedUri ->
                             imageUri = selectedUri // Actualizamos el estado con la imagen seleccionada
                             hasImage = selectedUri != null // Verificamos si hay una imagen
-                            uri = selectedUri // Guardamos la URI en la variable uri
+                            uri = selectedUri
                         })
                     }
 

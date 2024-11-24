@@ -35,12 +35,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.proyecto.ComposeFileProvider
 
 
 @Composable
 fun MenuFotos(onImageSelected: (Uri?) -> Unit) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
+    var imageUri: Uri? by remember { mutableStateOf(null) }
 
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -50,6 +52,16 @@ fun MenuFotos(onImageSelected: (Uri?) -> Unit) {
             val imageUri = uri
             // Llamamos al callback con la URI seleccionada
             onImageSelected(imageUri)
+        }
+    )
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            if (success) {
+                onImageSelected(imageUri)  // Notifica la imagen capturada
+                Log.d("IMG", "Imagen capturada: $imageUri")
+            }
         }
     )
 
@@ -98,7 +110,10 @@ fun MenuFotos(onImageSelected: (Uri?) -> Unit) {
                         Text("Camara")
                     }
                 },
-                onClick = { }
+                onClick = {
+                    imageUri = ComposeFileProvider.getImageUri(context)
+                    cameraLauncher.launch(imageUri!!)
+                }
             )
             DropdownMenuItem(
                 text = {
