@@ -112,4 +112,9 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
 
     implementation("io.coil-kt:coil-compose:2.1.0")
+
+    implementation("androidx.compose.ui:ui:1.0.5")
+    implementation("androidx.compose.material:material:1.0.5")
+    implementation("androidx.compose.ui:ui-tooling:1.0.5")
+    implementation("com.google.android.exoplayer:exoplayer:2.15.1")
 }
