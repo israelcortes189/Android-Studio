@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.proyecto.Componentes.MenuLateral
 import com.example.proyecto.Componentes.TopBar
 import com.example.proyecto.Models.Tarea
@@ -159,65 +161,93 @@ fun cuadroDeTareas(tarea: Tarea, notaViewModel: NotasViewModel, navController: N
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(250.dp)
             .padding(horizontal = 40.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = verdeAzul)
     ) {
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            item {
-                Row(
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween  // Distribuye íconos en extremos opuestos
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = stringResource(R.string.editar_nota),
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween  // Distribuye íconos en extremos opuestos
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = stringResource(R.string.editar_nota),
-                        modifier = Modifier
-                            .size(35.dp)
-                            .clickable {
-                                val id = tarea.id
-                                navController.navigate("RutaEditarTarea/$id")
-                            },
-                        tint = Color.Gray
-                    )
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = stringResource(R.string.eliminar_tarea),
-                        modifier = Modifier
-                            .size(35.dp)
-                            .clickable {
-                                notaViewModel.removeTarea(tarea)
-                            },
-                        tint = Color.Red
-                    )
-                }
-            }
-            item {
-                Text(
-                    text = tarea.titulo,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                        .size(35.dp)
+                        .clickable {
+                            val id = tarea.id
+                            navController.navigate("RutaEditarTarea/$id")
+                        },
+                    tint = Color.Gray
+                )
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = stringResource(R.string.eliminar_tarea),
+                    modifier = Modifier
+                        .size(35.dp)
+                        .clickable {
+                            notaViewModel.removeTarea(tarea)
+                        },
+                    tint = Color.Red
                 )
             }
-            item {
-                Text(
-                    text = tarea.descripcion,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black
+
+            Text(
+                text = tarea.titulo,
+                modifier = Modifier.padding(bottom = 8.dp),
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+
+            Text(
+                text = tarea.descripcion,
+                modifier = Modifier.padding(bottom = 8.dp),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color.Black
+            )
+
+            // Mostrar imagen si está disponible
+            tarea.imagenUri?.let { uri ->
+                Text(text = "Imagen:")
+                AsyncImage(
+                    model = uri,
+                    contentDescription = "Imagen guardada",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(8.dp)
+                        .clickable {
+                            // Implementar lógica para mostrar imagen en pantalla completa
+                        }
+                )
+            }
+
+            // Mostrar video si está disponible
+            tarea.videoUri?.let { uri ->
+                Text(text = "Video:")
+                Icon(
+                    imageVector = Icons.Default.Videocam,
+                    contentDescription = "Video icon",
+                    modifier = Modifier
+                        .size(75.dp)
+                        .padding(8.dp)
+                        .clickable {
+                            // Implementar lógica para reproducir video en pantalla completa
+                        },
+                    tint = Color.Gray
                 )
             }
         }
     }
 }
+
 

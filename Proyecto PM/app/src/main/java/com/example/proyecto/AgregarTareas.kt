@@ -1,9 +1,11 @@
 package com.example.proyecto
 
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Looper.prepare
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -35,6 +37,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +46,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,6 +68,10 @@ import com.google.android.exoplayer2.ui.PlayerView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.request.ImageRequest
+import coil.request.videoFrameMillis
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewModel) {
@@ -120,20 +130,18 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                         )
                         MenuFotos(
                             onImagesSelected = { selectedUris ->
-                                imageUris = selectedUris
+                                imageUris = imageUris + selectedUris
                             },
                             onVideosSelected = { selectedUris ->
-                                videoUris = selectedUris
+                                videoUris = videoUris + selectedUris.filter { it !in videoUris }
                             },
                             onFileTypeChanged = { nuevoTipo ->
                                 when (nuevoTipo) {
                                     "foto" -> {
                                         hasImage = true
-                                        // No cambiar hasVideo aquí
                                     }
                                     "video" -> {
                                         hasVideo = true
-                                        // No cambiar hasImage aquí
                                     }
                                     else -> {
                                         hasImage = false
@@ -233,26 +241,55 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
 
                         LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
                             items(videoUris) { uri ->
-                                Icon(
-                                    imageVector = Icons.Default.Videocam,
-                                    contentDescription = "Video icon",
-                                    modifier = Modifier
-                                        .size(75.dp)          // Ajustar tamaño del ícono
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                        .clickable {
-                                            selectedVideoUri = uri
-                                            showFullScreenPlayer = true // Mostrar reproductor en pantalla completa
-                                        },
-                                    tint = Color.Gray
-                                )
+                                val context = LocalContext.current
+                                var thumbnailBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+
+                                // Generar miniatura usando MediaMetadataRetriever
+                                LaunchedEffect(uri) {
+                                    withContext(Dispatchers.IO) {
+                                        val retriever = MediaMetadataRetriever()
+                                        try {
+                                            retriever.setDataSource(context, uri) // Usa el contexto y URI
+                                            val bitmap = retriever.getFrameAtTime(0) // Captura el primer frame
+                                            thumbnailBitmap = bitmap?.asImageBitmap()
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        } finally {
+                                            retriever.release()
+                                        }
+                                    }
+                                }
+
+                                // Mostrar la miniatura o el ícono de carga
+                                thumbnailBitmap?.let { bitmap ->
+                                    Image(
+                                        bitmap = bitmap,
+                                        contentDescription = "Miniatura del video",
+                                        modifier = Modifier
+                                            .size(75.dp)
+                                            .padding(8.dp)
+                                            .clickable {
+                                                selectedVideoUri = uri
+                                                showFullScreenPlayer = true
+                                            },
+                                        contentScale = ContentScale.Crop
+                                    )
+                                } ?: run {
+                                    Icon(
+                                        imageVector = Icons.Default.Videocam,
+                                        contentDescription = "Cargando miniatura...",
+                                        modifier = Modifier
+                                            .size(75.dp)
+                                            .padding(8.dp),
+                                        tint = Color.Gray
+                                    )
+                                }
                             }
                         }
-
                         if (showFullScreenPlayer && selectedVideoUri != null) {
                             FullScreenVideoPlayer(
                                 videoUri = selectedVideoUri!!
-                            ){
+                            ) {
                                 showFullScreenPlayer = false
                             }
                         }
@@ -262,10 +299,14 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                     Button(
                         onClick = {
                             if (estadoDeTextoV.value.isNotBlank() && estadoDeTextoV2.value.isNotBlank()) {
+                                val imagenUri = imageUris.firstOrNull()?.toString()
+                                val videoUri = videoUris.firstOrNull()?.toString()
                                 notaViewModel.addTarea(
                                     Tarea(
                                         titulo = estadoDeTextoV.value,
-                                        descripcion = estadoDeTextoV2.value
+                                        descripcion = estadoDeTextoV2.value,
+                                        imagenUri = imagenUri,
+                                        videoUri = videoUri
                                     )
                                 )
                             }
@@ -398,6 +439,7 @@ fun FullScreenImageViewer(imageUri: Uri, onDismiss: () -> Unit) {
         }
     }
 }
+
 
 
 

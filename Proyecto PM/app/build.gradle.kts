@@ -117,4 +117,7 @@ dependencies {
     implementation("androidx.compose.material:material:1.0.5")
     implementation("androidx.compose.ui:ui-tooling:1.0.5")
     implementation("com.google.android.exoplayer:exoplayer:2.15.1")
+
+    implementation ("io.coil-kt:coil:2.1.0")
+    implementation ("io.coil-kt:coil-video:2.1.0")
 }
