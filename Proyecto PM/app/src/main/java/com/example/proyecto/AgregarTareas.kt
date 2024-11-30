@@ -3,6 +3,7 @@ package com.example.proyecto
 import android.net.Uri
 import android.os.Looper.prepare
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
@@ -31,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,19 +73,24 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
     var uri by remember { mutableStateOf<Uri?>(null) }
     var hasImage by remember { mutableStateOf(false) }
     var hasVideo by remember { mutableStateOf(false) }
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var imageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    var videoUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
 
     var showFullScreenPlayer by remember { mutableStateOf(false) }
+    var selectedVideoUri by remember { mutableStateOf<Uri?>(null) }
+    var showFullScreenImage by remember { mutableStateOf(false) }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     MenuLateral(
-        navController= navController,
+        navController = navController,
         drawerState = drawerState
-    ){
+    ) {
         Scaffold(
             topBar = {
                 TopBar(drawerState)
             },
-            modifier = Modifier.fillMaxSize()) { innerPadding ->
+            modifier = Modifier.fillMaxSize()
+        ) { innerPadding ->
             LazyColumn(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -91,7 +100,8 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                     // Icono de regresar en notas
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 20.dp)
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp)
                             .fillMaxWidth()
                     ) {
                         Icon(
@@ -109,21 +119,21 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                             fontWeight = FontWeight.Bold
                         )
                         MenuFotos(
-                            onImageSelected = { selectedUri ->
-                                selectedUri?.let { uri ->
-                                    imageUri = uri  // Actualiza la URI seleccionada
-                                }
+                            onImagesSelected = { selectedUris ->
+                                imageUris = selectedUris
+                            },
+                            onVideosSelected = { selectedUris ->
+                                videoUris = selectedUris
                             },
                             onFileTypeChanged = { nuevoTipo ->
-                                tipo = nuevoTipo  // Actualiza la variable tipo
                                 when (nuevoTipo) {
                                     "foto" -> {
                                         hasImage = true
-                                        hasVideo = false
+                                        // No cambiar hasVideo aquí
                                     }
                                     "video" -> {
-                                        hasImage = false
                                         hasVideo = true
+                                        // No cambiar hasImage aquí
                                     }
                                     else -> {
                                         hasImage = false
@@ -136,6 +146,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
 
                     Spacer(modifier = Modifier.height(80.dp))
 
+                    // Campo de título
                     texto2(
                         name = stringResource(R.string.titulo_Agregar_Tarea),
                         modifier = Modifier.padding(horizontal = 20.dp),
@@ -154,6 +165,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
 
                     Spacer(modifier = Modifier.height(50.dp))
 
+                    // Campo de descripción
                     texto2(
                         name = stringResource(R.string.descripcion_Agregar_Tarea),
                         modifier = Modifier.padding(horizontal = 20.dp),
@@ -175,56 +187,87 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                                 .height(200.dp)
                         )
 
-                        Spacer(modifier = Modifier.height(16.dp)) // Espacio entre los elementos
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
 
-                        if ((hasImage || hasVideo) && imageUri != null) {
-                            texto2(
-                                name = "Imagenes y Videos: ",
-                                modifier = Modifier.padding(horizontal = 20.dp),
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                    if (hasImage && imageUris.isNotEmpty()) {
+                        texto2(
+                            name = "Imágenes seleccionadas:",
+                            modifier = Modifier.padding(horizontal = 20.dp),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                            Spacer(modifier = Modifier.height(16.dp)) // Espacio entre los elementos
-
-                            if (hasImage) {
+                        LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
+                            items(imageUris) { uri ->
                                 AsyncImage(
-                                    model = imageUri,
+                                    model = uri,
+                                    contentDescription = "Selected image",
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .size(75.dp),
-                                    contentDescription = "Selected image"
+                                        .size(75.dp)
+                                        .padding(4.dp)
+                                        .clickable {
+                                            selectedImageUri = uri
+                                            showFullScreenImage = true
+                                        }
                                 )
                             }
+                        }
+                        if (showFullScreenImage && selectedImageUri != null) {
+                            FullScreenImageViewer(
+                                imageUri = selectedImageUri!!
+                            ) {
+                                showFullScreenImage = false
+                            }
+                        }
+                    }
 
-                            var isVideoPlaying by remember { mutableStateOf(false) }
+                    // Videos seleccionados
+                    if (hasVideo && videoUris.isNotEmpty()) {
+                        texto2(
+                            name = "Videos seleccionados:",
+                            modifier = Modifier.padding(horizontal = 20.dp),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                            if (hasVideo) {
+                        LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
+                            items(videoUris) { uri ->
                                 Icon(
                                     imageVector = Icons.Default.Videocam,
                                     contentDescription = "Video icon",
                                     modifier = Modifier
-                                        .size(75.dp)  // Ajustar tamaño del ícono
+                                        .size(75.dp)          // Ajustar tamaño del ícono
                                         .fillMaxWidth()
                                         .padding(8.dp)
                                         .clickable {
-                                            // Cambiar el estado cuando se hace clic
+                                            selectedVideoUri = uri
                                             showFullScreenPlayer = true // Mostrar reproductor en pantalla completa
                                         },
                                     tint = Color.Gray
                                 )
                             }
-                            if (showFullScreenPlayer) {
-                                FullScreenVideoPlayer(videoUri = imageUri!!) {
-                                    showFullScreenPlayer = false // Cerrar el reproductor
-                                }
+                        }
+
+                        if (showFullScreenPlayer && selectedVideoUri != null) {
+                            FullScreenVideoPlayer(
+                                videoUri = selectedVideoUri!!
+                            ){
+                                showFullScreenPlayer = false
                             }
                         }
                     }
+
+                    // Botón de agregar tarea
                     Button(
                         onClick = {
-                            if(estadoDeTextoV.value.isNotBlank() && estadoDeTextoV2.value.isNotBlank()){
-                                notaViewModel.addTarea(Tarea(titulo = estadoDeTextoV.value, descripcion = estadoDeTextoV2.value))
+                            if (estadoDeTextoV.value.isNotBlank() && estadoDeTextoV2.value.isNotBlank()) {
+                                notaViewModel.addTarea(
+                                    Tarea(
+                                        titulo = estadoDeTextoV.value,
+                                        descripcion = estadoDeTextoV2.value
+                                    )
+                                )
                             }
                             navController.navigate(route = Rutas.Tareas.ruta)
                         },
@@ -239,6 +282,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                         Text(text = stringResource(R.string.agregar_nota_Agregar_Tarea_1))
                     }
                 }
+
             }
         }
     }
@@ -264,10 +308,17 @@ fun FullScreenVideoPlayer(videoUri: Uri, onDismiss: () -> Unit) {
         }
     }
 
-    val playbackState = exoPlayer
-    val isPlaying = playbackState?.isPlaying ?: false
+    DisposableEffect(exoPlayer) {
+        onDispose {
+            exoPlayer.release()
+        }
+    }
 
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(onDismissRequest = {
+        exoPlayer.stop() // Detener la reproducción
+        exoPlayer.release() // Liberar el reproductor
+        onDismiss()
+    }) {
         Box(
             modifier = Modifier
                 .fillMaxSize() // Hacer que el reproductor ocupe toda la pantalla
@@ -288,6 +339,50 @@ fun FullScreenVideoPlayer(videoUri: Uri, onDismiss: () -> Unit) {
 
             // Botón para cerrar el reproductor
             IconButton(
+                onClick = {
+                    exoPlayer.stop() // Detener la reproducción
+                    exoPlayer.release() // Liberar el reproductor
+                    onDismiss() // Cerrar el reproductor
+                },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = "Close",
+                    tint = Color.White,
+                    modifier = Modifier.size(36.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun FullScreenImageViewer(imageUri: Uri, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+        ) {
+            AndroidView(
+                factory = { context ->
+                    ImageView(context).apply {
+                        setImageURI(imageUri)
+                        scaleType = ImageView.ScaleType.FIT_CENTER
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+
+            // Botón para cerrar el visor de imagen
+            IconButton(
                 onClick = onDismiss,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -300,29 +395,9 @@ fun FullScreenVideoPlayer(videoUri: Uri, onDismiss: () -> Unit) {
                     modifier = Modifier.size(36.dp)
                 )
             }
-
-            // Botón de reproducción/pausa
-            IconButton(
-                onClick = {
-                    if (isPlaying) {
-                        exoPlayer.pause()
-                    } else {
-                        exoPlayer.play()
-                    }
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp)
-            ) {
-                Icon(
-                    imageVector = if (isPlaying) Icons.Filled.Refresh else Icons.Filled.PlayArrow,
-                    contentDescription = if (isPlaying) "Pause" else "Play",
-                    tint = Color.White,
-                    modifier = Modifier.size(48.dp)
-                )
-            }
         }
     }
 }
+
 
 

@@ -2,6 +2,7 @@ package com.example.proyecto
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -163,51 +164,60 @@ fun cuadroDeTareas(tarea: Tarea, notaViewModel: NotasViewModel, navController: N
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = verdeAzul)
     ) {
-        Box(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
-        ){
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = stringResource(R.string.editar_nota),
-                modifier = Modifier
-                    .size(35.dp)
-                    .align(Alignment.TopEnd)
-                    .clickable {
-                        val id= tarea.id
-                        navController.navigate("RutaEditarTarea/$id")
-                    },
-                tint = Color.Gray,
-            )
-            Text(
-                text = tarea.titulo,
-                modifier = Modifier.padding(bottom = 16.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            Text(
-                text = tarea.descripcion,
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = stringResource(R.string.eliminar_tarea),
-                modifier = Modifier
-                    .size(35.dp)
-                    .align(Alignment.BottomEnd)
-                    .clickable {
-                        notaViewModel.removeTarea(tarea)    // Llama a removeNota en el ViewModel
-                    },
-                tint = Color.Red
-            )
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween  // Distribuye íconos en extremos opuestos
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.editar_nota),
+                        modifier = Modifier
+                            .size(35.dp)
+                            .clickable {
+                                val id = tarea.id
+                                navController.navigate("RutaEditarTarea/$id")
+                            },
+                        tint = Color.Gray
+                    )
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.eliminar_tarea),
+                        modifier = Modifier
+                            .size(35.dp)
+                            .clickable {
+                                notaViewModel.removeTarea(tarea)
+                            },
+                        tint = Color.Red
+                    )
+                }
+            }
+            item {
+                Text(
+                    text = tarea.titulo,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            }
+            item {
+                Text(
+                    text = tarea.descripcion,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Black
+                )
+            }
         }
     }
 }
+

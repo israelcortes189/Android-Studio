@@ -8,5 +8,5 @@ data class Tarea(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val titulo: String,
-    val descripcion: String
+    val descripcion: String,
 )

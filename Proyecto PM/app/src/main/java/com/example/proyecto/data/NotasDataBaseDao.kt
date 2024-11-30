@@ -25,6 +25,9 @@ interface NotasDataBaseDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateNota(nota:Nota)
 
+    //@Query("UPDATE tareas SET imagen = :imagen WHERE id = :id")
+    //suspend fun updateNotaImagen(id: Int, imagen: ByteArray)
+
     @Delete
     suspend fun deleteNota(nota:Nota)
 

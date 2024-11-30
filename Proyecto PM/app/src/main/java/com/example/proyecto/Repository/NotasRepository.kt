@@ -32,5 +32,4 @@ class NotasRepository @Inject constructor(private val notasDatabaseDao: NotasDat
 
     suspend fun getTareaById(id: Int): Tarea? =
         notasDatabaseDao.getTareaById(id)
-
 }
