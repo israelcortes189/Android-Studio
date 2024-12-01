@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Declarar el permiso para usar la cámara -->
+    <!-- Permisos necesarios para acceder a la cámara y el almacenamiento -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Declarar el uso de la cámara, pero no como requisito obligatorio -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 
     <application
@@ -39,6 +39,5 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
-
     </application>
 </manifest>

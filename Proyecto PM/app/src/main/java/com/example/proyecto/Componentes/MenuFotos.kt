@@ -110,12 +110,12 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
         }
     )
 
-    /*
+    // Solicitud de permisos para la cámara
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
-                imageUri = ComposeFileProvider.getImageUri(context)  // Genera la URI aquí
+                imageUri = ComposeFileProvider.getImageUri(context) // Genera la URI aquí
                 imageUri?.let {
                     cameraLauncher.launch(it)
                 }
@@ -124,7 +124,7 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
             }
         }
     )
-*/
+
     Box(
         modifier = Modifier.fillMaxWidth()
             .wrapContentSize(Alignment.TopEnd)
@@ -194,17 +194,18 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
                     }
                 },
                 onClick = {
-                    imageUri = ComposeFileProvider.getImageUri(context)
-                    cameraLauncher.launch(imageUri!!)  // Lanzamos la cámara
-                    /*
                     // Verificamos si el permiso de cámara está concedido
-                    val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                    val permissionCheckResult = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.CAMERA
+                    )
                     if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-
+                        imageUri = ComposeFileProvider.getImageUri(context)
+                        cameraLauncher.launch(imageUri!!) // Lanzamos la cámara
                     } else {
                         // Si no está concedido, solicitamos el permiso de cámara
                         permissionLauncher.launch(Manifest.permission.CAMERA)
-                    }*/
+                    }
                 }
             )
 
@@ -221,20 +222,21 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
                     }
                 },
                 onClick = {
-                    val videoUri = ComposeFileProvider.getImageUri(context)  // Suponiendo una función similar a getImageUri
-                    videoLauncher.launch(videoUri)
-                    imageUri=videoUri
-                    /*
                     // Verificamos si el permiso de cámara está concedido
-                    val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+                    val permissionCheckResult = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.CAMERA
+                    )
+
                     if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                        val videoUri = ComposeFileProvider.getImageUri(context)  // Suponiendo una función similar a getImageUri
+                        val videoUri = ComposeFileProvider.getImageUri(context) // Suponiendo una función similar a getImageUri
                         videoLauncher.launch(videoUri)
-                        imageUri=videoUri
+                        imageUri = videoUri
                     } else {
                         // Si no está concedido, solicitamos el permiso de cámara
                         permissionLauncher.launch(Manifest.permission.CAMERA)
-                    }*/
+                    }
+
                 }
             )
 
