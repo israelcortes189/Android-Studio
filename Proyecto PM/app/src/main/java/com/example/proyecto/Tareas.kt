@@ -1,5 +1,8 @@
 package com.example.proyecto
 
+import android.media.MediaMetadataRetriever
+import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +17,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -33,14 +38,21 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -49,8 +61,11 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.proyecto.Componentes.MenuLateral
 import com.example.proyecto.Componentes.TopBar
+import com.example.proyecto.Models.Media
 import com.example.proyecto.Models.Tarea
 import com.example.proyecto.screens.NotasViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 val verdeAzul = Color(0xFFE0E99D)
 
@@ -58,15 +73,10 @@ val verdeAzul = Color(0xFFE0E99D)
 fun Tareas(navController: NavHostController, notaViewModel: NotasViewModel) {
     val tareas = notaViewModel.listaTareas.collectAsState().value
 
-    val drawerState = rememberDrawerState(
-        initialValue = DrawerValue.Closed)
-    MenuLateral(
-        navController= navController,
-        drawerState = drawerState
-    ){
-        Scaffold(topBar = {
-            TopBar(drawerState)
-        },
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    MenuLateral(navController = navController, drawerState = drawerState) {
+        Scaffold(
+            topBar = { TopBar(drawerState) },
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
@@ -95,7 +105,6 @@ fun Tareas(navController: NavHostController, notaViewModel: NotasViewModel) {
                         texto(stringResource(R.string.tareas1), Modifier.weight(1f))
                     }
                     cuadroDeBusqueda()
-                    listaTareas(tareas, notaViewModel = notaViewModel, navController)
                     Button(
                         onClick = { navController.navigate(route = Rutas.AgregarTareas.ruta) },
                         modifier = Modifier
@@ -108,6 +117,11 @@ fun Tareas(navController: NavHostController, notaViewModel: NotasViewModel) {
                     ) {
                         Text(text = stringResource(R.string.agregar_tarea_Tarea))
                     }
+                }
+
+                items(tareas) { tarea ->
+                    cuadroDeTareas(tarea, notaViewModel = notaViewModel, navController)
+                    Spacer(modifier = Modifier.height(30.dp))
                 }
             }
         }
@@ -128,9 +142,7 @@ fun texto(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun cuadroDeBusqueda() {
     var buscar by rememberSaveable { mutableStateOf("") }
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
+    Column(modifier = Modifier.padding(16.dp)) {
         TextField(
             value = buscar,
             onValueChange = { buscar = it },
@@ -158,24 +170,44 @@ fun listaTareas(tareas: List<Tarea>, notaViewModel: NotasViewModel, navControlle
 
 @Composable
 fun cuadroDeTareas(tarea: Tarea, notaViewModel: NotasViewModel, navController: NavHostController) {
+    val imagenes = remember { mutableStateListOf<Media>() }
+    val videos = remember { mutableStateListOf<Media>() }
+    var isImageViewerOpen by remember { mutableStateOf(false) }
+    var isVideoPlayerOpen by remember { mutableStateOf(false) }
+    var currentUri by remember { mutableStateOf<Uri?>(null) }
+
+    LaunchedEffect(tarea.id) {
+        val mediaList = notaViewModel.getMediaByTareaId(tarea.id)
+        imagenes.clear()
+        videos.clear()
+        imagenes.addAll(mediaList.filter { it.tipo == "imagen" })
+        videos.addAll(mediaList.filter { it.tipo == "video" })
+    }
+
+    if (isImageViewerOpen && currentUri != null) {
+        FullScreenImageViewer(imageUri = currentUri!!, onDismiss = { isImageViewerOpen = false })
+    }
+
+    if (isVideoPlayerOpen && currentUri != null) {
+        FullScreenVideoPlayer(videoUri = currentUri!!, onDismiss = { isVideoPlayerOpen = false })
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp)
-            .padding(horizontal = 40.dp),
+            .padding(16.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = verdeAzul)
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween  // Distribuye íconos en extremos opuestos
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
@@ -216,38 +248,73 @@ fun cuadroDeTareas(tarea: Tarea, notaViewModel: NotasViewModel, navController: N
                 color = Color.Black
             )
 
-            // Mostrar imagen si está disponible
-            tarea.imagenUri?.let { uri ->
-                Text(text = "Imagen:")
-                AsyncImage(
-                    model = uri,
-                    contentDescription = "Imagen guardada",
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(8.dp)
-                        .clickable {
-                            // Implementar lógica para mostrar imagen en pantalla completa
-                        }
-                )
+            if (imagenes.isNotEmpty()) {
+                Text(text = "Imágenes seleccionadas:", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
+                    items(imagenes) { media ->
+                        AsyncImage(
+                            model = media.uri,
+                            contentDescription = "Imagen guardada",
+                            modifier = Modifier
+                                .size(75.dp)
+                                .padding(4.dp)
+                                .clickable {
+                                    currentUri = Uri.parse(media.uri)
+                                    isImageViewerOpen = true
+                                }
+                        )
+                    }
+                }
             }
 
-            // Mostrar video si está disponible
-            tarea.videoUri?.let { uri ->
-                Text(text = "Video:")
-                Icon(
-                    imageVector = Icons.Default.Videocam,
-                    contentDescription = "Video icon",
-                    modifier = Modifier
-                        .size(75.dp)
-                        .padding(8.dp)
-                        .clickable {
-                            // Implementar lógica para reproducir video en pantalla completa
-                        },
-                    tint = Color.Gray
-                )
+            if (videos.isNotEmpty()) {
+                Text(text = "Videos seleccionados:", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
+                    items(videos) { media ->
+                        val context = LocalContext.current
+                        var thumbnailBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+
+                        LaunchedEffect(media.uri) {
+                            withContext(Dispatchers.IO) {
+                                val retriever = MediaMetadataRetriever()
+                                try {
+                                    retriever.setDataSource(context, Uri.parse(media.uri))
+                                    val bitmap = retriever.getFrameAtTime(0)
+                                    thumbnailBitmap = bitmap?.asImageBitmap()
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                } finally {
+                                    retriever.release()
+                                }
+                            }
+                        }
+
+                        thumbnailBitmap?.let { bitmap ->
+                            Image(
+                                bitmap = bitmap,
+                                contentDescription = "Miniatura del video",
+                                modifier = Modifier
+                                    .size(75.dp)
+                                    .padding(8.dp)
+                                    .clickable {
+                                        currentUri = Uri.parse(media.uri)
+                                        isVideoPlayerOpen = true
+                                    },
+                                contentScale = ContentScale.Crop
+                            )
+                        } ?: run {
+                            Icon(
+                                imageVector = Icons.Default.Videocam,
+                                contentDescription = "Cargando miniatura...",
+                                modifier = Modifier
+                                    .size(75.dp)
+                                    .padding(8.dp),
+                                tint = Color.Gray
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 }
-
-

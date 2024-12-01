@@ -130,7 +130,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                         )
                         MenuFotos(
                             onImagesSelected = { selectedUris ->
-                                imageUris = imageUris + selectedUris
+                                imageUris = selectedUris
                             },
                             onVideosSelected = { selectedUris ->
                                 videoUris = videoUris + selectedUris.filter { it !in videoUris }
@@ -299,15 +299,16 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                     Button(
                         onClick = {
                             if (estadoDeTextoV.value.isNotBlank() && estadoDeTextoV2.value.isNotBlank()) {
-                                val imagenUri = imageUris.firstOrNull()?.toString()
-                                val videoUri = videoUris.firstOrNull()?.toString()
+                                val imagenUris = imageUris.map { it.toString() }
+                                val videoUris = videoUris.map { it.toString() }
+
                                 notaViewModel.addTarea(
                                     Tarea(
                                         titulo = estadoDeTextoV.value,
-                                        descripcion = estadoDeTextoV2.value,
-                                        imagenUri = imagenUri,
-                                        videoUri = videoUri
-                                    )
+                                        descripcion = estadoDeTextoV2.value
+                                    ),
+                                    imagenUris = imagenUris,
+                                    videoUris = videoUris
                                 )
                             }
                             navController.navigate(route = Rutas.Tareas.ruta)
@@ -323,7 +324,6 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                         Text(text = stringResource(R.string.agregar_nota_Agregar_Tarea_1))
                     }
                 }
-
             }
         }
     }

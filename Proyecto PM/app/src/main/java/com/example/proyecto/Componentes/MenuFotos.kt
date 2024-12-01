@@ -55,7 +55,7 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
 
     // Launcher para seleccionar imágenes o videos
     val imagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
+        contract = ActivityResultContracts.GetMultipleContents(),
         onResult = { uri ->
             uri?.let {
                 imageUris = imageUris + it  // Agregar nueva imagen a la lista
