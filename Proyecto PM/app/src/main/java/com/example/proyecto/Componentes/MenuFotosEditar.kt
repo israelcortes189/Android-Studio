@@ -45,21 +45,19 @@ import java.io.File
 import java.util.UUID
 
 @Composable
-fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri>) -> Unit, onFileTypeChanged: (String) -> Unit) {
+fun MenuFotosEditar(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri>) -> Unit, onFileTypeChanged: (String) -> Unit) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var imageUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
-    var tipo = "tipo"
-    var imageUri: Uri? by remember { mutableStateOf(null) }
     var videoUris by remember { mutableStateOf<List<Uri>>(emptyList()) }
+    var imageUri: Uri? by remember { mutableStateOf(null) }
 
     // Launcher para seleccionar imágenes o videos
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
-        onResult = { uri ->
-            uri?.let {
-                imageUris = imageUris + it  // Agregar nueva imagen a la lista
-                onImagesSelected(imageUris)  // Llama al callback con la lista actualizada
+        onResult = { uris ->
+            uris?.let {
+                onImagesSelected(it)  // Llama al callback con la lista actualizada
             }
             onFileTypeChanged("foto")
         }
@@ -69,9 +67,8 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
     val videoPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
         onResult = { uris ->
-            uris?.let{
-                videoUris = videoUris + it
-                onVideosSelected(videoUris)
+            uris?.let {
+                onVideosSelected(it)
             }
             onFileTypeChanged("video")
         }
@@ -84,8 +81,7 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
             if (success && imageUri != null) {
                 // Agregar la imagen tomada a la lista de imágenes
                 imageUri?.let {
-                    imageUris = imageUris + it  // Agregar la nueva foto a la lista
-                    onImagesSelected(imageUris)  // Llama al callback con la lista actualizada
+                    onImagesSelected(listOf(it))  // Llama al callback con la lista actualizada
                 }
                 onFileTypeChanged("foto")  // Notifica que se capturó una foto
             }
@@ -99,8 +95,7 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
             if (success && imageUri != null) {  // Asegúrate de que tienes una URI para el video
                 // Agregar el video capturado a la lista de videos
                 imageUri?.let {
-                    videoUris = videoUris + it  // Agregar el video a la lista
-                    onVideosSelected(videoUris)  // Llama al callback con la lista de videos
+                    onVideosSelected(listOf(it))  // Llama al callback con la lista de videos
                 }
                 onFileTypeChanged("video")  // Notifica que se capturó un video
                 Log.d("VIDEO", "Video capturado: $imageUri")
@@ -110,23 +105,9 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
         }
     )
 
-    /*
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            if (isGranted) {
-                imageUri = ComposeFileProvider.getImageUri(context)  // Genera la URI aquí
-                imageUri?.let {
-                    cameraLauncher.launch(it)
-                }
-            } else {
-                Toast.makeText(context, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
-            }
-        }
-    )
-*/
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .wrapContentSize(Alignment.TopEnd)
             .size(50.dp)
     ) {
@@ -158,7 +139,7 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
                     }
                 },
                 onClick = {
-                        imagePicker.launch("image/*")
+                    imagePicker.launch("image/*")
                 }
             )
 
@@ -196,15 +177,6 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
                 onClick = {
                     imageUri = ComposeFileProvider.getImageUri(context)
                     cameraLauncher.launch(imageUri!!)  // Lanzamos la cámara
-                    /*
-                    // Verificamos si el permiso de cámara está concedido
-                    val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-                    if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-
-                    } else {
-                        // Si no está concedido, solicitamos el permiso de cámara
-                        permissionLauncher.launch(Manifest.permission.CAMERA)
-                    }*/
                 }
             )
 
@@ -223,18 +195,7 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
                 onClick = {
                     val videoUri = ComposeFileProvider.getImageUri(context)  // Suponiendo una función similar a getImageUri
                     videoLauncher.launch(videoUri)
-                    imageUri=videoUri
-                    /*
-                    // Verificamos si el permiso de cámara está concedido
-                    val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-                    if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                        val videoUri = ComposeFileProvider.getImageUri(context)  // Suponiendo una función similar a getImageUri
-                        videoLauncher.launch(videoUri)
-                        imageUri=videoUri
-                    } else {
-                        // Si no está concedido, solicitamos el permiso de cámara
-                        permissionLauncher.launch(Manifest.permission.CAMERA)
-                    }*/
+                    imageUri = videoUri
                 }
             )
 

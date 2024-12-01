@@ -133,7 +133,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                                 imageUris = selectedUris
                             },
                             onVideosSelected = { selectedUris ->
-                                videoUris = videoUris + selectedUris.filter { it !in videoUris }
+                                videoUris = selectedUris
                             },
                             onFileTypeChanged = { nuevoTipo ->
                                 when (nuevoTipo) {

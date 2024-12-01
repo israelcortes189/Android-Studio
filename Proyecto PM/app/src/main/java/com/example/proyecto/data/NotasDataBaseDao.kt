@@ -67,5 +67,6 @@ interface NotasDataBaseDao {
     @Query("SELECT id FROM tareas ORDER BY id DESC LIMIT 1")
     suspend fun getLastInsertedTareaId(): Int
 
-    @Delete suspend fun deleteMedia(media: Media)
+    @Delete
+    suspend fun deleteMedia(media: Media)
 }

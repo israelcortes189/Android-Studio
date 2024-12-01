@@ -47,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.proyecto.Componentes.MenuFotos
+import com.example.proyecto.Componentes.MenuFotosEditar
 import com.example.proyecto.Componentes.MenuLateral
 import com.example.proyecto.Componentes.TopBar
 import com.example.proyecto.Models.Media
@@ -64,6 +66,8 @@ fun EditarTarea(navController: NavHostController, notaViewModel: NotasViewModel,
     val videos = remember { mutableStateListOf<Media>() }
     val imagenesParaEliminar = remember { mutableStateListOf<Media>() }
     val videosParaEliminar = remember { mutableStateListOf<Media>() }
+    val imagenesParaAgregar = remember { mutableStateListOf<Media>() }
+    val videosParaAgregar = remember { mutableStateListOf<Media>() }
     var isImageViewerOpen by remember { mutableStateOf(false) }
     var isVideoPlayerOpen by remember { mutableStateOf(false) }
     var currentUri by remember { mutableStateOf<Uri?>(null) }
@@ -153,6 +157,27 @@ fun EditarTarea(navController: NavHostController, notaViewModel: NotasViewModel,
                             .height(200.dp)
                     )
 
+                    // Integrar MenuFotos para agregar imágenes y videos
+                    MenuFotosEditar(
+                        onImagesSelected = { newImages ->
+                            newImages.forEach { uri ->
+                                val media = Media(uri = uri.toString(), tipo = "imagen", tareaId = id)
+                                imagenesParaAgregar.add(media)
+                                imagenes.add(media)
+                            }
+                        },
+                        onVideosSelected = { newVideos ->
+                            newVideos.forEach { uri ->
+                                val media = Media(uri = uri.toString(), tipo = "video", tareaId = id)
+                                videosParaAgregar.add(media)
+                                videos.add(media)
+                            }
+                        },
+                        onFileTypeChanged = { tipo ->
+                            // Acción opcional si necesitas diferenciar entre foto y video
+                        }
+                    )
+
                     // Mostrar imágenes si están disponibles
                     if (imagenes.isNotEmpty()) {
                         Text(text = "Imágenes seleccionadas:", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp))
@@ -186,7 +211,6 @@ fun EditarTarea(navController: NavHostController, notaViewModel: NotasViewModel,
                         }
                     }
 
-                    // Mostrar videos si están disponibles
                     if (videos.isNotEmpty()) {
                         Text(text = "Videos seleccionados:", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp))
                         LazyRow(modifier = Modifier.padding(horizontal = 20.dp)) {
@@ -194,7 +218,6 @@ fun EditarTarea(navController: NavHostController, notaViewModel: NotasViewModel,
                                 Box(modifier = Modifier.padding(4.dp)) {
                                     val context = LocalContext.current
                                     var thumbnailBitmap by remember { mutableStateOf<ImageBitmap?>(null) }
-
                                     LaunchedEffect(media.uri) {
                                         withContext(Dispatchers.IO) {
                                             val retriever = MediaMetadataRetriever()
@@ -209,7 +232,6 @@ fun EditarTarea(navController: NavHostController, notaViewModel: NotasViewModel,
                                             }
                                         }
                                     }
-
                                     thumbnailBitmap?.let { bitmap ->
                                         Image(
                                             bitmap = bitmap,
@@ -231,7 +253,6 @@ fun EditarTarea(navController: NavHostController, notaViewModel: NotasViewModel,
                                             tint = Color.Gray
                                         )
                                     }
-
                                     Icon(
                                         imageVector = Icons.Default.Delete,
                                         contentDescription = "Eliminar video",
@@ -254,13 +275,20 @@ fun EditarTarea(navController: NavHostController, notaViewModel: NotasViewModel,
                             tarea?.let {
                                 val updatedTarea = it.copy(titulo = titulo, descripcion = contenido)
                                 notaViewModel.updateTarea(updatedTarea)
-
+                                // Eliminar medios marcados para eliminar
                                 imagenesParaEliminar.forEach { media ->
                                     notaViewModel.removeMedia(media)
                                 }
-
                                 videosParaEliminar.forEach { media ->
                                     notaViewModel.removeMedia(media)
+                                }
+                                // Agregar nuevos medios a la tarea
+                                val tareaId = it.id
+                                imagenesParaAgregar.forEach { media ->
+                                    notaViewModel.insertMedia(media.copy(tareaId = tareaId))
+                                }
+                                videosParaAgregar.forEach { media ->
+                                    notaViewModel.insertMedia(media.copy(tareaId = tareaId))
                                 }
                             }
                             navController.navigate(route = Rutas.Tareas.ruta)
@@ -273,11 +301,12 @@ fun EditarTarea(navController: NavHostController, notaViewModel: NotasViewModel,
                             contentColor = Color.White
                         )
                     ) {
-                        Text(text = "Guardar Cambios")
+                        Text(text = "Editar")
                     }
                 }
             }
         }
     }
 }
+
 

@@ -122,4 +122,8 @@ class NotasViewModel @Inject constructor(
     fun removeMedia(media: Media) = viewModelScope.launch(Dispatchers.IO) {
         repo.deleteMedia(media)
     }
+
+    // Función para insertar un medio en la base de datos
+    fun insertMedia(media: Media) = viewModelScope.launch(Dispatchers.IO) {
+        repo.insertMedia(media) }
 }
