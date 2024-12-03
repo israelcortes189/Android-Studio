@@ -1,8 +1,15 @@
 package com.example.proyecto.screens
 
+import android.annotation.SuppressLint
+import android.app.Application
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.proyecto.Alarmas.AlarmItem
+import com.example.proyecto.Alarmas.AlarmSchedulerImpl
 import com.example.proyecto.Models.Media
 import com.example.proyecto.Models.Nota
 import com.example.proyecto.Models.Tarea
@@ -13,18 +20,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class NotasViewModel @Inject constructor(
-    private val repo: NotasRepository
-) : ViewModel() {
+    private val repo: NotasRepository,
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _listaNotas = MutableStateFlow<List<Nota>>(emptyList())
     val listaNotas = _listaNotas.asStateFlow()
 
     private val _listaTareas = MutableStateFlow<List<Tarea>>(emptyList())
     val listaTareas = _listaTareas.asStateFlow()
+
+    private val alarmScheduler = AlarmSchedulerImpl(application)
 
     // StateFlows para imágenes y videos
     private val _imagenes = MutableStateFlow<List<Media>>(emptyList())
@@ -55,20 +66,62 @@ class NotasViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun addNota(nota: Nota) = viewModelScope.launch {
         repo.addNota(nota)
+        nota.fechaRecordatorio?.let { fechaRecordatorio ->
+            scheduleReminder(nota, fechaRecordatorio)
+        }
     }
 
+    private fun scheduleReminder(nota: Nota, fechaRecordatorio: LocalDateTime) {
+        val alarmItem = AlarmItem(
+            alarmTime = fechaRecordatorio,
+            message = "Recordatorio: ${nota.titulo}"
+        )
+        alarmScheduler.schedule(alarmItem)
+    }
+
+
+    //Metodo para remover nota y cancelar la alarma
     fun removeNota(nota: Nota) = viewModelScope.launch {
+        nota.fechaRecordatorio?.let {
+            val alarmItem = AlarmItem(
+                alarmTime = it,
+                message = "Recordatorio: ${nota.titulo}"
+            )
+            alarmScheduler.cancel(alarmItem)
+        }
         repo.deleteNota(nota)
     }
 
-    fun removeAllNotas() = viewModelScope.launch {
-        repo.deleteAllNotas()
+    //Remover Recordatio Solamente
+    fun removeRecordatorio(nota: Nota) = viewModelScope.launch {
+        nota.fechaRecordatorio?.let {
+            val alarmItem = AlarmItem(
+                alarmTime = it,
+                message = "Recordatorio: ${nota.titulo}"
+            )
+            alarmScheduler.cancel(alarmItem)
+        }
+        val updatedNota = nota.copy(fechaRecordatorio = null)
+        repo.updateNota(updatedNota)
     }
 
+
     fun updateNota(nota: Nota) = viewModelScope.launch {
+        // Actualizar la nota en el repositorio
         repo.updateNota(nota)
+
+        // Programar una nueva alarma si es necesario
+        nota.fechaRecordatorio?.let { fecha ->
+            scheduleReminder(nota, fecha)
+        }
+    }
+
+
+    fun removeAllNotas() = viewModelScope.launch {
+        repo.deleteAllNotas()
     }
 
     fun getAllNotas() = viewModelScope.launch {

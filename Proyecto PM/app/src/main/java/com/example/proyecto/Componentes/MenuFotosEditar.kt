@@ -105,6 +105,21 @@ fun MenuFotosEditar(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (Li
         }
     )
 
+    // Solicitud de permisos para la cámara
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                imageUri = ComposeFileProvider.getImageUri(context) // Genera la URI aquí
+                imageUri?.let {
+                    cameraLauncher.launch(it)
+                }
+            } else {
+                Toast.makeText(context, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -175,8 +190,18 @@ fun MenuFotosEditar(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (Li
                     }
                 },
                 onClick = {
-                    imageUri = ComposeFileProvider.getImageUri(context)
-                    cameraLauncher.launch(imageUri!!)  // Lanzamos la cámara
+                    // Verificamos si el permiso de cámara está concedido
+                    val permissionCheckResult = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.CAMERA
+                    )
+                    if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                        imageUri = ComposeFileProvider.getImageUri(context)
+                        cameraLauncher.launch(imageUri!!) // Lanzamos la cámara
+                    } else {
+                        // Si no está concedido, solicitamos el permiso de cámara
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
                 }
             )
 
@@ -193,9 +218,19 @@ fun MenuFotosEditar(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (Li
                     }
                 },
                 onClick = {
-                    val videoUri = ComposeFileProvider.getImageUri(context)  // Suponiendo una función similar a getImageUri
-                    videoLauncher.launch(videoUri)
-                    imageUri = videoUri
+                    // Verificamos si el permiso de cámara está concedido
+                    val permissionCheckResult = ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.CAMERA
+                    )
+                    if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+                        val videoUri = ComposeFileProvider.getImageUri(context) // Suponiendo una función similar a getImageUri
+                        videoLauncher.launch(videoUri)
+                        imageUri = videoUri
+                    } else {
+                        // Si no está concedido, solicitamos el permiso de cámara
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
                 }
             )
 

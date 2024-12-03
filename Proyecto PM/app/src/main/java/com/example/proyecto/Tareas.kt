@@ -318,3 +318,10 @@ fun cuadroDeTareas(tarea: Tarea, notaViewModel: NotasViewModel, navController: N
         }
     }
 }
+
+
+
+
+
+
+

@@ -55,6 +55,8 @@ dependencies {
 
     implementation(libs.androidx.foundation.android)
     implementation(libs.androidx.storage)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
     releaseImplementation(libs.androidx.media3.common.ktx)
     val room_version = "2.5.2"// O la última versión
     implementation ("androidx.room:room-runtime:$room_version")
@@ -117,6 +119,10 @@ dependencies {
     implementation("androidx.compose.material:material:1.0.5")
     implementation("androidx.compose.ui:ui-tooling:1.0.5")
     implementation("com.google.android.exoplayer:exoplayer:2.15.1")
+    implementation ("androidx.compose.material:material:1.0.5")
+    implementation ("com.google.android.material:material:1.4.0")
+
+
 
     implementation ("io.coil-kt:coil:2.1.0")
     implementation ("io.coil-kt:coil-video:2.1.0")

@@ -7,8 +7,13 @@
     <!-- Declarar el uso de la cámara, pero no como requisito obligatorio -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <application
+
         android:name= ".NotasApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -39,5 +44,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
+
+        <receiver android:name=".Alarmas.AlarmReceiverPerro" >
+        </receiver>
+
     </application>
 </manifest>

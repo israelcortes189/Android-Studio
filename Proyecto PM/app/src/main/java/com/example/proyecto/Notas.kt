@@ -1,7 +1,9 @@
 package com.example.proyecto
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,18 +13,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,62 +55,70 @@ import com.example.proyecto.Componentes.MenuLateral
 import com.example.proyecto.Componentes.TopBar
 import com.example.proyecto.Models.Nota
 import com.example.proyecto.screens.NotasViewModel
-
+import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
 
 val verdeClaro = Color(0xFFCFFFCF)
 
+
 @Composable
 fun Notas(navController: NavHostController, notaViewModel: NotasViewModel) {
-    val notas = notaViewModel.listaNotas.collectAsState().value
-    val drawerState = rememberDrawerState(
-        initialValue = DrawerValue.Closed
-    )
-    MenuLateral(
-        navController = navController,
-        drawerState = drawerState
-    )
-    {
+    val notas by notaViewModel.listaNotas.collectAsState()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
+    MenuLateral(navController = navController, drawerState = drawerState) {
         Scaffold(
             topBar = {
                 TopBar(drawerState)
             },
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(Color.White)
         ) { innerPadding ->
-            LazyColumn(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-            ) {
-                item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.regresar_Notas),
+            Box(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                ) {
+                    item {
+                        Row(
                             modifier = Modifier
-                                .size(35.dp)
-                                .padding(end = 8.dp)
-                                .clickable { navController.popBackStack() },
-                            tint = Color.Gray,
-                        )
-                        textoNotas(stringResource(R.string.notas_Notas), Modifier.weight(1f))
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = stringResource(R.string.regresar_Notas),
+                                modifier = Modifier
+                                    .size(35.dp)
+                                    .padding(end = 8.dp)
+                                    .clickable { navController.popBackStack() },
+                                tint = Color.Gray
+                            )
+                            textoNotas(stringResource(R.string.notas_Notas), Modifier.weight(1f))
+                        }
+                        cuadroDeBusquedaNotas()
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
-                    cuadroDeBusquedaNotas()
-                    listaNotas(notas , notaViewModel = notaViewModel, navController)
-                    Button(
-                        onClick = { navController.navigate(route = Rutas.AgregarNotas.ruta) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 30.dp)
-                    ) {
-                        Text(text = stringResource(R.string.agregar_nota_Notas))
+                    items(notas) { nota ->
+                        cuadroDeTareasNotas(nota, notaViewModel = notaViewModel, navController)
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
+                    item {
+                        Spacer(modifier = Modifier.height(60.dp))
+                    }
+                }
+                FloatingActionButton(
+                    onClick = { navController.navigate(route = Rutas.AgregarNotas.ruta) },
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.BottomEnd),
+                    containerColor = Color(0xFF1567A6),
+                    contentColor = Color.White
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.agregar_nota_Notas))
                 }
             }
         }
@@ -123,91 +139,111 @@ fun textoNotas(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun cuadroDeBusquedaNotas() {
     var buscar by rememberSaveable { mutableStateOf("") }
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
+    Column(modifier = Modifier.padding(16.dp)) {
         TextField(
             value = buscar,
             onValueChange = { buscar = it },
             placeholder = { Text(stringResource(R.string.buscar)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
-              //  containerColor = Color.LightGray,
                 focusedIndicatorColor = Color.Blue,
                 unfocusedIndicatorColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.height(25.dp))
     }
 }
 
-@Composable
-fun listaNotas(notas: List<Nota> , notaViewModel: NotasViewModel, navController: NavHostController) {
-    Column {
-        for (nota in notas) {
-            cuadroDeTareasNotas(nota, notaViewModel =  notaViewModel, navController)
-            Spacer(modifier = Modifier.height(30.dp))
-        }
-        Spacer(modifier = Modifier.height(60.dp))
-    }
-}
-
+@SuppressLint("NewApi")
 @Composable
 fun cuadroDeTareasNotas(nota: Nota, notaViewModel: NotasViewModel, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
-            .padding(horizontal = 40.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = verdeClaro)
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = stringResource(R.string.editar_nota),
-                modifier = Modifier
-                    .size(35.dp)
-                    .align(Alignment.TopEnd)
-                    .clickable {
-                        val id = nota.id // Cambia 123 por el valor que desees enviar
-                        navController.navigate("RutaEditarNota/$id")
-                    },
-                tint = Color.Gray,
-            )
-            Text(
-                text = nota.titulo,
-                modifier = Modifier.padding(bottom = 16.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = nota.titulo,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Row {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.editar_nota),
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable {
+                                navController.navigate("RutaEditarNota/${nota.id}")
+                            },
+                        tint = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.eliminar_nota),
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable {
+                                notaViewModel.removeNota(nota)
+                            },
+                        tint = Color.Red
+                    )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = nota.descripcion,
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
                 color = Color.Black
             )
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = stringResource(R.string.eliminar_nota),
-                modifier = Modifier
-                    .size(35.dp)
-                    .align(Alignment.BottomEnd)
-                    .clickable {
-                        notaViewModel.removeNota(nota)    // Llama a removeNota en el ViewModel
+
+            nota.fechaRecordatorio?.let { fecha ->
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Recordatorio: ${fecha.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))}",
+                    fontSize = 14.sp,
+                    fontStyle = FontStyle.Italic,
+                    color = Color.Gray
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            /*
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Checkbox(
+                    checked = nota.completada,
+                    onCheckedChange = {
+                        notaViewModel.toggleNotaCompletada(nota)
                     },
-                tint = Color.Red
-            )
+                    colors = CheckboxDefaults.colors(checkedColor = Color(0xFF1567A6))
+                )
+                Text(
+                    text = "Completada",
+                    modifier = Modifier.padding(start = 8.dp),
+                    color = Color.Black,
+                    fontSize = 16.sp
+                )
+            }*/
         }
     }
 }
+
 

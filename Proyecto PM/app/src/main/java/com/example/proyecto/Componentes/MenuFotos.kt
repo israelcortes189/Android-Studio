@@ -80,7 +80,7 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
     // Lector de imágenes desde la cámara
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
-        onResult = { success ->
+        onResult = { success ->444
             if (success && imageUri != null) {
                 // Agregar la imagen tomada a la lista de imágenes
                 imageUri?.let {
@@ -227,7 +227,6 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
                         context,
                         Manifest.permission.CAMERA
                     )
-
                     if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
                         val videoUri = ComposeFileProvider.getImageUri(context) // Suponiendo una función similar a getImageUri
                         videoLauncher.launch(videoUri)
@@ -236,7 +235,6 @@ fun MenuFotos(onImagesSelected: (List<Uri>) -> Unit, onVideosSelected: (List<Uri
                         // Si no está concedido, solicitamos el permiso de cámara
                         permissionLauncher.launch(Manifest.permission.CAMERA)
                     }
-
                 }
             )
 

@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NotasDataBaseDao {
-    // Funciones para Notas
     @Query("SELECT * FROM notas")
     fun getNotas(): Flow<List<Nota>>
 
@@ -32,7 +31,7 @@ interface NotasDataBaseDao {
     @Query("DELETE FROM notas")
     suspend fun deleteAllNotas()
 
-    // Funciones para Tareas
+// Funciones para Tareas
     @Query("SELECT * FROM tareas")
     fun getTareas(): Flow<List<Tarea>>
 

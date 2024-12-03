@@ -12,8 +12,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NotasRepository @Inject constructor(private val notasDatabaseDao: NotasDataBaseDao){
-
-    // Funciones para Notas
     suspend fun addNota(nota: Nota) = withContext(Dispatchers.IO) {
         notasDatabaseDao.insertNota(nota)
     }
@@ -30,7 +28,8 @@ class NotasRepository @Inject constructor(private val notasDatabaseDao: NotasDat
         notasDatabaseDao.deleteAllNotas()
     }
 
-    fun getAllNotas(): Flow<List<Nota>> = notasDatabaseDao.getNotas().flowOn(Dispatchers.IO).conflate()
+    fun getAllNotas(): Flow<List<Nota>> =
+        notasDatabaseDao.getNotas().flowOn(Dispatchers.IO).conflate()
 
     suspend fun getNotaById(id: Int): Nota? = withContext(Dispatchers.IO) {
         notasDatabaseDao.getNotaById(id)

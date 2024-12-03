@@ -122,7 +122,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                                 .clickable { navController.popBackStack() },
                             tint = Color.Gray
                         )
-                        texto2(
+                        texto(
                             name = stringResource(R.string.agregar_nota_Agregar_Tarea),
                             modifier = Modifier.padding(horizontal = 40.dp),
                             fontSize = 30.sp,
@@ -155,7 +155,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                     Spacer(modifier = Modifier.height(80.dp))
 
                     // Campo de título
-                    texto2(
+                    texto(
                         name = stringResource(R.string.titulo_Agregar_Tarea),
                         modifier = Modifier.padding(horizontal = 20.dp),
                         fontSize = 20.sp,
@@ -174,7 +174,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                     Spacer(modifier = Modifier.height(50.dp))
 
                     // Campo de descripción
-                    texto2(
+                    texto(
                         name = stringResource(R.string.descripcion_Agregar_Tarea),
                         modifier = Modifier.padding(horizontal = 20.dp),
                         fontSize = 20.sp,
@@ -199,7 +199,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
                     }
 
                     if (hasImage && imageUris.isNotEmpty()) {
-                        texto2(
+                        texto(
                             name = "Imágenes seleccionadas:",
                             modifier = Modifier.padding(horizontal = 20.dp),
                             fontSize = 20.sp,
@@ -232,7 +232,7 @@ fun AgregarTareas(navController: NavHostController, notaViewModel: NotasViewMode
 
                     // Videos seleccionados
                     if (hasVideo && videoUris.isNotEmpty()) {
-                        texto2(
+                        texto(
                             name = "Videos seleccionados:",
                             modifier = Modifier.padding(horizontal = 20.dp),
                             fontSize = 20.sp,
@@ -439,7 +439,6 @@ fun FullScreenImageViewer(imageUri: Uri, onDismiss: () -> Unit) {
         }
     }
 }
-
 
 
 
