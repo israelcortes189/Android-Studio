@@ -108,7 +108,6 @@ class NotasViewModel @Inject constructor(
         repo.updateNota(updatedNota)
     }
 
-
     fun updateNota(nota: Nota) = viewModelScope.launch {
         // Actualizar la nota en el repositorio
         repo.updateNota(nota)

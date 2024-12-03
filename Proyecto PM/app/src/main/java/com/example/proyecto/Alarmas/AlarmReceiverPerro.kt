@@ -61,7 +61,6 @@ interface AlarmScheduler {
 class AlarmSchedulerImpl(
     private val context: Context
 ) : AlarmScheduler {
-
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     @SuppressLint("NewApi")

@@ -223,25 +223,6 @@ fun cuadroDeTareasNotas(nota: Nota, notaViewModel: NotasViewModel, navController
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-            /*
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Checkbox(
-                    checked = nota.completada,
-                    onCheckedChange = {
-                        notaViewModel.toggleNotaCompletada(nota)
-                    },
-                    colors = CheckboxDefaults.colors(checkedColor = Color(0xFF1567A6))
-                )
-                Text(
-                    text = "Completada",
-                    modifier = Modifier.padding(start = 8.dp),
-                    color = Color.Black,
-                    fontSize = 16.sp
-                )
-            }*/
         }
     }
 }

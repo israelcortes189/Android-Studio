@@ -20,7 +20,6 @@ class MainActivity : ComponentActivity() {
 
         // Crear el canal de notificación
         createNotificationChannel()
-
         setContent {
             // Aplicar el tema dinámico basado en el tema del sistema
             ProyectoTheme {
