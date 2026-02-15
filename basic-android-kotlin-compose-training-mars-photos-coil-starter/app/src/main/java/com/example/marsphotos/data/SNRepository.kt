@@ -56,29 +56,40 @@ class NetworSNRepository(
 
     override suspend fun acceso(m: String, p: String): String {
         val soapFinal = bodyacceso.format(m.uppercase(), p)
-        val body = soapFinal.toRequestBody("text/xml; charset=utf-8".toMediaType())
+        Log.d("SOAP_BODY_ACCESO", soapFinal) // Log del body enviado
 
+        val body = soapFinal.toRequestBody("text/xml; charset=utf-8".toMediaType())
         val response = snApiService.acceso(body)
+
+        //Log de respuesta
+        Log.d("SOAP_RESPONSE_ACCESO", response.toString())
+
+
         val xml = response.body()?.string() ?: return "ERROR"
+        // Log del XML recibido
+        Log.d("SOAP_XML_ACCESO", xml)
 
         val resultRegex = "<accesoLoginResult>(.*?)</accesoLoginResult>".toRegex()
         val result = resultRegex.find(xml)?.groupValues?.get(1)
 
         return if (result != null && result.contains("true", ignoreCase = true)) {
             sessionCookie = response.headers()["Set-Cookie"]
-            currentMatricula = m.uppercase()   // guardamos la matrícula aquí
+            currentMatricula = m.uppercase()
+            Log.d("LOGIN", "Resultado del repo: 'OK'")
+            Log.d("COOKIE", sessionCookie ?: "sin cookie")
             "OK"
         } else {
             sessionCookie = null
             currentMatricula = null
+            Log.d("LOGIN", "Resultado del repo: 'ERROR'")
             "ERROR"
         }
     }
 
+
     override suspend fun accesoObjeto(m: String, p: String): Usuario {
         return Usuario(matricula = m)
     }
-
 
     override suspend fun profile(): ProfileStudent? {
         if (!hasSession()) return null
@@ -112,7 +123,7 @@ class NetworSNRepository(
                 nombre = jsonObj.optString("nombre", "Alumno"),
                 carrera = jsonObj.optString("carrera", ""),
                 semestre = jsonObj.optString("semActual", ""),   // aquí tomamos el semestre real
-                promedio = jsonObj.optString("cdtosAcumulados", "") // puedes usar créditos acumulados como proxy de promedio, o si el servicio devuelve otro campo específico
+                creditos = jsonObj.optString("cdtosAcumulados", "") //créditos acumulados
             )
         } catch (e: Exception) {
             Log.e("SOAP_PROFILE", "Error parseando JSON: ${e.message}")

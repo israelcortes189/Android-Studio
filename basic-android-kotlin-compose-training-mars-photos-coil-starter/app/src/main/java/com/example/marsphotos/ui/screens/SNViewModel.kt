@@ -46,10 +46,8 @@ sealed interface SNUiState {
 
 
 class SNViewModel(private val repository: SNRepository) : ViewModel() {
-
     fun hasSession(): Boolean =
         repository.hasSession()
-
 
     var profileState by mutableStateOf<ProfileStudent?>(null)
         private set
@@ -59,7 +57,6 @@ class SNViewModel(private val repository: SNRepository) : ViewModel() {
 
     fun loadProfile() {
         if (!repository.hasSession()) return
-
         viewModelScope.launch {
             isLoading = true
             try {
@@ -114,9 +111,6 @@ class SNViewModel(private val repository: SNRepository) : ViewModel() {
             }
         }
     }
-
-
-
 
     /**
      * Factory for [MarsViewModel] that takes [MarsPhotosRepository] as a dependency

@@ -8,5 +8,5 @@ data class ProfileStudent(
     val nombre: String = "",
     val carrera: String = "",
     val semestre: String = "",
-    val promedio: String = ""
+    val creditos: String = ""
 )

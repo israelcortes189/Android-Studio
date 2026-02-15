@@ -8,6 +8,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Header
 
+//Retrofit
 // Body para login
 val bodyacceso = """
     <?xml version="1.0" encoding="utf-8"?>
@@ -24,7 +25,7 @@ val bodyacceso = """
     </soap:Envelope>
 """.trimIndent()
 
-// Body para perfil académico con lineamiento
+// Body para perfil
 val bodyPerfil = """
     <?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -39,8 +40,9 @@ val bodyPerfil = """
     </soap:Envelope>
 """.trimIndent()
 
-interface SICENETWService {
 
+//Retrofit
+interface SICENETWService {
     // Login
     @Headers(
         "Content-Type: text/xml; charset=utf-8",
@@ -49,7 +51,7 @@ interface SICENETWService {
     @POST("/ws/wsalumnos.asmx")
     suspend fun acceso(@Body soap: RequestBody): retrofit2.Response<ResponseBody>
 
-    // Perfil académico con lineamiento
+    // Perfil académico
     @Headers(
         "Content-Type: text/xml; charset=utf-8",
         "SOAPAction: \"http://tempuri.org/getAlumnoAcademicoWithLineamiento\""
@@ -59,8 +61,4 @@ interface SICENETWService {
         @Header("Cookie") cookie: String,
         @Body soap: RequestBody
     ): retrofit2.Response<ResponseBody>
-
-    // Endpoint genérico (si lo necesitas para pruebas)
-    @GET("/")
-    suspend fun con(): ResponseBody
 }
