@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.proyecto.R
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(drawerState: DrawerState){
@@ -29,6 +30,5 @@ fun TopBar(drawerState: DrawerState){
                Icon(Icons.Outlined.Menu, stringResource(R.string.abrir_menu_lateral))
             }
         }
-
     )
 }

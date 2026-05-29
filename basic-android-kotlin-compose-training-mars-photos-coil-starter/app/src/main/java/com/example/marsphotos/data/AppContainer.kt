@@ -49,11 +49,8 @@ class DefaultAppContainer(applicationContext: Context) : AppContainer {
     init {
         client = OkHttpClient()
         val builder = OkHttpClient.Builder()
-
         builder.addInterceptor(AddCookiesInterceptor(applicationContext)) // VERY VERY IMPORTANT
-
         builder.addInterceptor(ReceivedCookiesInterceptor(applicationContext)) // VERY VERY IMPORTANT
-
         client = builder.build()
     }
     /**

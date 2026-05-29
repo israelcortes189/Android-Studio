@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1075359208491",
+    "project_id": "practica-firebase-a7af6",
+    "storage_bucket": "practica-firebase-a7af6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1075359208491:android:ba86e1901e0b18b1e5466e",
+        "android_client_info": {
+          "package_name": "com.example.myapplication_fire_base"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtzg_khjoqXdxaCf1zZGQAOpdAESE4Cf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

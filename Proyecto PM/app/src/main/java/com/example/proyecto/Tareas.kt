@@ -74,6 +74,7 @@ fun Tareas(navController: NavHostController, notaViewModel: NotasViewModel) {
     val tareas = notaViewModel.listaTareas.collectAsState().value
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
     MenuLateral(navController = navController, drawerState = drawerState) {
         Scaffold(
             topBar = { TopBar(drawerState) },

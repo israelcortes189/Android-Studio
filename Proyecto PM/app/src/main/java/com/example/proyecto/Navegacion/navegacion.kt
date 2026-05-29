@@ -1,5 +1,7 @@
 package com.example.proyecto.Navegacion
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -16,6 +18,7 @@ import com.example.proyecto.Rutas
 import com.example.proyecto.Tareas
 import com.example.proyecto.screens.NotasViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun navegacion(notaViewModel: NotasViewModel,) {
     val navController = rememberNavController()
